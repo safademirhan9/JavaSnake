@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import javax.swing.*;
+//import java.awt.event.KeyEvent;
+
 /**
  * @author Dawid Nogacz on 19.05.2019
  */
@@ -174,6 +177,7 @@ public class Board {
     }
 
     public void readKeyboard(KeyEvent event) {
+        
         switch(event.getCode()) {
             case W: changeDirection(1); break;
             case S: changeDirection(2); break;
@@ -184,8 +188,52 @@ public class Board {
             case DOWN: changeDirection(2); break;
             case LEFT: changeDirection(3); break;
             case RIGHT: changeDirection(4); break;
+            case ESCAPE : PopupMenu(); break;
+
         }
+        /*e.getKeyCode() == KeyEvent.VK_ESCAPE
+        KeyEvent.*/
     }
+
+    private void PopupMenu(){
+
+        System.out.println("escape");
+        JFrame f = new JFrame("Popup");
+        f.setSize(400, 400);
+        //does not work
+        //f.setIconImage(new Image("\\src\\main\\resources\\background.png"));
+        //not sure about it
+        f.setAlwaysOnTop(true);
+
+
+
+        //build pop-up menu
+        JPopupMenu popup = new JPopupMenu("");
+
+        
+        popup.setName("MENU");
+       
+        
+        //creating menu items
+        JButton bResume = new JButton( new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
+        JButton bNewGame = new JButton(new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
+        JButton bChangeSettings = new JButton(new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
+        JButton bExit = new JButton(new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
+        
+        //Adding buttons to popup-menu
+        popup.add(bResume);
+        popup.add(bNewGame);
+        popup.add(bChangeSettings);
+        popup.add(bExit);
+
+        f.add(popup);
+        popup.setVisible(true);
+        f.setVisible(true);
+
+
+
+
+     }
 
     private void changeDirection(int newDirection) {
         if(newDirection == 1 && direction != 2) {
