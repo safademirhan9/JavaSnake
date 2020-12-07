@@ -196,23 +196,14 @@ public class Board {
     }
 
     private void PopupMenu(){
-
+        JFrame popup = new JFrame("MENU");
+        popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         System.out.println("escape");
-        JFrame f = new JFrame("Popup");
-        f.setSize(400, 400);
+        popup.setSize(400, 400);
+        popup.setAlwaysOnTop(true);
         //does not work
-        //f.setIconImage(new Image("\\src\\main\\resources\\background.png"));
-        //not sure about it
-        f.setAlwaysOnTop(true);
-
-
-
-        //build pop-up menu
-        JPopupMenu popup = new JPopupMenu("");
-
-        
-        popup.setName("MENU");
-       
+        //f.setIconImage(new Image("\\src\\main\\resources\\background.png"))
+        //build pop-up menu               
         
         //creating menu items
         JButton bResume = new JButton( new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
@@ -226,14 +217,11 @@ public class Board {
         popup.add(bChangeSettings);
         popup.add(bExit);
 
-        f.add(popup);
+        popup.setLocationRelativeTo(null);
         popup.setVisible(true);
-        f.setVisible(true);
-
-
-
-
      }
+
+ 
 
     private void changeDirection(int newDirection) {
         if(newDirection == 1 && direction != 2) {

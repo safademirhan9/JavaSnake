@@ -9,6 +9,8 @@ import javafx.scene.layout.*;
 import pl.nogacz.snake.board.Board;
 import pl.nogacz.snake.board.Coordinates;
 import pl.nogacz.snake.pawn.PawnClass;
+import javax.swing.*;
+
 
 /**
  * @author Dawid Nogacz on 19.05.2019
