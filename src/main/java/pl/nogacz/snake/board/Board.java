@@ -13,9 +13,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.awt.Dimension;
+import javax.swing.ImageIcon;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
+import javax.swing.border.EmptyBorder;
+import java.awt.Insets;
+import java.awt.Dimension;
 
 /**
  * @author Dawid Nogacz on 19.05.2019
@@ -191,61 +197,78 @@ public class Board {
             case ESCAPE : PopupMenu(); break;
 
         }
-        /*e.getKeyCode() == KeyEvent.VK_ESCAPE
-        KeyEvent.*/
     }
 
     private void PopupMenu(){
-        JFrame popup = new JFrame("MENU");
-        JPanel menuPanel = new JPanel();
-        JLabel label1 = new JLabel("MENU");
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        JFrame frame = new JFrame("MENU");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         
+        // Set the panel to add buttons
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(0,1));
+        JLabel backImage =new JLabel(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/background.jpg"));
+        backImage.setOpaque(false);
+        backImage.setSize(500, 500);
+      
 
         
-        System.out.println("escape");
-        popup.setSize(400, 400);
-        popup.setAlwaysOnTop(true);
-
-        //creating menu items
-        JButton bResume = new JButton("RESUME", new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
-        JButton bNewGame = new JButton("NEW GAME", new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
-        JButton bChangeSettings = new JButton("CHANGE SETTINGS", new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
-        JButton bExit = new JButton("EXIT", new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
-     
-        label1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        bResume.setAlignmentX(Component.CENTER_ALIGNMENT);
-        bNewGame.setAlignmentX(Component.CENTER_ALIGNMENT);
-        bChangeSettings.setAlignmentX(Component.CENTER_ALIGNMENT);
-        bExit.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
-        menuPanel.add(bResume);
-        menuPanel.add(bNewGame);
-        menuPanel.add(bChangeSettings);
-        menuPanel.add(bExit);
-        popup.add(menuPanel);
-
-        popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        popup.setLocationRelativeTo(null);
-        popup.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        popup.pack();
-        popup.setVisible(true);
+        // Set the BoxLayout to be X_AXIS: from left to right
+        BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+         
+        // Set the Boxayout to be Y_AXIS from top to down
+        //BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+ 
+        panel.setLayout(boxlayout);
+         
+        // Set border for the panel
+        //panel.setBorder(new EmptyBorder(new Insets(50, 50, 50, 50)));
+        panel.setBorder(new EmptyBorder(new Insets(50, 100, 50, 100)));   
        
         
-     
+        // Define new buttons and text fields
+        JLabel tx1 = new JLabel("Menu");
+        JButton jb1 = new JButton("RESUME");
+        JButton jb2 = new JButton("NEW GAME");
+        JButton jb3 = new JButton("CHANGE SETTINGS");
+        JButton jb4 = new JButton("EXIT");
         
-   
+        jb1.setPreferredSize(new Dimension(300, 30));
+        jb2.setPreferredSize(new Dimension(300, 30));
+        jb3.setPreferredSize(new Dimension(300, 30));
+        jb4.setPreferredSize(new Dimension(300, 30));
+        
+        /*jb1.setIcon(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/SNAKE_BODY.png"));
+        jb1.setIconTextGap(3);
+        jb1.setHorizontalAlignment(SwingConstants.LEFT);*/
 
-       /* //set bounds for butons
-        bResume.setBounds(100, 40, 200, 60);
-        bNewGame.setBounds(100, 130, 200, 60);
-        bChangeSettings.setBounds(100, 220, 200, 60);
-        bExit.setBounds(100, 310, 200, 60);
+         jb1.setAlignmentX(Component.CENTER_ALIGNMENT);
+         jb2.setAlignmentX(Component.CENTER_ALIGNMENT);
+         jb3.setAlignmentX(Component.CENTER_ALIGNMENT);
+         jb4.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        //Adding buttons to popup-menu
      
-
-        popup.setLocationRelativeTo(null);
-        popup.setVisible(true);*/
+        // Add buttons to the frame (and spaces between buttons)
+        panel.add(tx1);
+        panel.add(Box.createRigidArea(new Dimension(0, 60)));     
+        panel.add(jb1);
+        panel.add(Box.createRigidArea(new Dimension(0, 60)));     
+        panel.add(jb2);
+        panel.add(Box.createRigidArea(new Dimension(0, 60)));
+        panel.add(jb3);
+        panel.add(Box.createRigidArea(new Dimension(0, 60)));
+        panel.add(jb4);
+        
+        frame.add(backImage);
+        // Set size for the frame
+        frame.setSize(500, 500);
+        
+         
+        // Set the window to be visible as the default to be false
+        frame.add(panel);
+        frame.validate();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
      }
 
  
@@ -273,4 +296,5 @@ public class Board {
     public static int getDirection() {
         return direction;
     }
+
 }

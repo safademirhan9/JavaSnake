@@ -10,7 +10,6 @@ public class Resources {
         ClassLoader classLoader = Resources.class.getClassLoader();
 
         URL resource = classLoader.getResource(fileName);
-
         return resource.getProtocol() + ":" + resource.getPath();
     }
 }
