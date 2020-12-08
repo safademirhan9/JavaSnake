@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.swing.*;
-//import java.awt.event.KeyEvent;
+import java.awt.*;
 
 /**
  * @author Dawid Nogacz on 19.05.2019
@@ -197,28 +197,55 @@ public class Board {
 
     private void PopupMenu(){
         JFrame popup = new JFrame("MENU");
-        popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel menuPanel = new JPanel();
+        JLabel label1 = new JLabel("MENU");
+
+        
         System.out.println("escape");
         popup.setSize(400, 400);
         popup.setAlwaysOnTop(true);
-        //does not work
-        //f.setIconImage(new Image("\\src\\main\\resources\\background.png"))
-        //build pop-up menu               
-        
+
         //creating menu items
-        JButton bResume = new JButton( new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
-        JButton bNewGame = new JButton(new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
-        JButton bChangeSettings = new JButton(new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
-        JButton bExit = new JButton(new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
+        JButton bResume = new JButton("RESUME", new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
+        JButton bNewGame = new JButton("NEW GAME", new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
+        JButton bChangeSettings = new JButton("CHANGE SETTINGS", new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
+        JButton bExit = new JButton("EXIT", new ImageIcon("\\src\\main\\resources\\SNAKE_BODY.png"));
+     
+        label1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bResume.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bNewGame.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bChangeSettings.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bExit.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+        menuPanel.add(bResume);
+        menuPanel.add(bNewGame);
+        menuPanel.add(bChangeSettings);
+        menuPanel.add(bExit);
+        popup.add(menuPanel);
+
+        popup.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        popup.setLocationRelativeTo(null);
+        popup.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        popup.pack();
+        popup.setVisible(true);
+       
         
+     
+        
+   
+
+       /* //set bounds for butons
+        bResume.setBounds(100, 40, 200, 60);
+        bNewGame.setBounds(100, 130, 200, 60);
+        bChangeSettings.setBounds(100, 220, 200, 60);
+        bExit.setBounds(100, 310, 200, 60);
+
         //Adding buttons to popup-menu
-        popup.add(bResume);
-        popup.add(bNewGame);
-        popup.add(bChangeSettings);
-        popup.add(bExit);
+     
 
         popup.setLocationRelativeTo(null);
-        popup.setVisible(true);
+        popup.setVisible(true);*/
      }
 
  
