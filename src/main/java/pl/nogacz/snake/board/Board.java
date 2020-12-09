@@ -35,6 +35,8 @@ public class Board {
     private Random random = new Random();
 
     private boolean isEndGame = false;
+    //added
+    private boolean paused = false;
 
     private static int direction = 1; // 1 - UP || 2 - BOTTOM || 3 - LEFT || 4 - RIGHT
     private int tailLength = 0;
@@ -111,9 +113,9 @@ public class Board {
                 } else {
                     isEndGame = true;
 
-                    new EndGame("End game...\n" +
+                    /*new EndGame("End game...\n" +
                             "You have " + tailLength + " points. \n" +
-                            "Maybe try again? :)");
+                            "Maybe try again? :)");*/
                 }
             } else {
                 board.remove(snakeHeadCoordinates);
@@ -175,10 +177,24 @@ public class Board {
         task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                if(!isEndGame) {
+                if(!isEndGame && !paused) {
                     checkMap();
                     mapTask();
                 }
+                /*if(paused){
+                    Coordinates newHead = snakeHeadCoordinates;
+                    int newDirection = direction;
+                    ArrayList<Coordinates> newTail = snakeTail;
+                    int newTailLength = tailLength;
+                    
+                    snakeHeadCoordinates = newHead;
+                    direction = newDirection;
+                    snakeTail = newTail;
+                    tailLength = newTailLength;
+
+                    checkMap();
+                    mapTask();
+                }*/
             }
         });
 
@@ -203,6 +219,7 @@ public class Board {
     }
 
     private void PopupMenu(){
+        paused = true;
         // Create and set up a frame window
         JFrame.setDefaultLookAndFeelDecorated(true);
         JFrame frame = new JFrame("MENU");
@@ -253,6 +270,7 @@ public class Board {
         
         jb1.addActionListener(new ActionListener(){  
         	public void actionPerformed(ActionEvent e){  
+                       paused = false;
         	           frame.setVisible(false);  
         	}  
         	}); 
