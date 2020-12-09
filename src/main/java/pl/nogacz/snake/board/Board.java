@@ -32,7 +32,7 @@ public class Board {
     private PawnClass snakeHeadClass = new PawnClass(Pawn.SNAKE_HEAD);
     private PawnClass snakeBodyClass = new PawnClass(Pawn.SNAKE_BODY);
     private PawnClass foodClass = new PawnClass(Pawn.FOOD);
-
+    private SoundManager m;
     private ArrayList<Coordinates> snakeTail = new ArrayList<>();
 
     public Board(Design design) {
@@ -44,7 +44,8 @@ public class Board {
 
     private void addStartEntity() {
         board.put(snakeHeadCoordinates, snakeHeadClass);
-
+        m= new SoundManager("sounds/GameSound2.wav");
+        m.loop();
         for(int i = 0; i < 22; i++) {
             board.put(new Coordinates(0, i), new PawnClass(Pawn.BRICK));
             board.put(new Coordinates(21, i), new PawnClass(Pawn.BRICK));
@@ -87,6 +88,8 @@ public class Board {
         if(coordinates.isValid()) {
             if(isFieldNotNull(coordinates)) {
                 if(getPawn(coordinates).getPawn().isFood()) {
+                    SoundManager s = new SoundManager("sounds/EatFood.wav");
+                    s.play();
                     board.remove(snakeHeadCoordinates);
                     board.put(snakeHeadCoordinates, snakeBodyClass);
                     board.put(coordinates, snakeHeadClass);
@@ -97,6 +100,7 @@ public class Board {
 
                     addEat();
                 } else {
+                    m.stop();
                     isEndGame = true;
 
                     new EndGame("End game...\n" +

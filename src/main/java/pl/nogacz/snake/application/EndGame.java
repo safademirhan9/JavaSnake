@@ -3,6 +3,7 @@ package pl.nogacz.snake.application;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import pl.nogacz.snake.Snake;
+import pl.nogacz.snake.board.SoundManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,13 +17,14 @@ public class EndGame {
 
     public EndGame(String message) {
         this.message = message;
-
+        SoundManager s=new SoundManager("sounds/GameOver9.wav");
+        s.play();
         printDialog();
     }
 
     public void printDialog() {
         Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.setTitle("JavaChess");
+        alert.setTitle("JavaSnake");
         alert.setContentText(message);
 
         ButtonType newGameButton = new ButtonType("New game");
