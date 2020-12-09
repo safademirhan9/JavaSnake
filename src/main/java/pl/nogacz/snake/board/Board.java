@@ -25,6 +25,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import pl.nogacz.snake.application.Resources;
+import pl.nogacz.snake.application.EndGame;
 
 /**
  * @author Dawid Nogacz on 19.05.2019
@@ -36,7 +37,7 @@ public class Board {
 
     private boolean isEndGame = false;
     //added
-    private boolean paused = false;
+    private volatile boolean   paused = false;
 
     private static int direction = 1; // 1 - UP || 2 - BOTTOM || 3 - LEFT || 4 - RIGHT
     private int tailLength = 0;
@@ -181,20 +182,21 @@ public class Board {
                     checkMap();
                     mapTask();
                 }
-                /*if(paused){
-                    Coordinates newHead = snakeHeadCoordinates;
-                    int newDirection = direction;
-                    ArrayList<Coordinates> newTail = snakeTail;
-                    int newTailLength = tailLength;
+                if(paused){
+                   System.out.println("paused");
+                    while(paused){
+                    try{
+                    Thread.sleep(100);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+    
+                    }
+                    System.out.println("NOT paused");
                     
-                    snakeHeadCoordinates = newHead;
-                    direction = newDirection;
-                    snakeTail = newTail;
-                    tailLength = newTailLength;
-
                     checkMap();
                     mapTask();
-                }*/
+                }
             }
         });
 
@@ -277,7 +279,9 @@ public class Board {
         
         jb2.addActionListener(new ActionListener(){  
         	public void actionPerformed(ActionEvent e){  
-        	           
+                        paused = false;
+                        frame.setVisible(false);
+                        new EndGame("").newGame();    
         	}  
         	}); 
         
