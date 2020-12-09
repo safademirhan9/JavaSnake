@@ -22,6 +22,9 @@ import java.net.URL;
 import javax.swing.border.EmptyBorder;
 import java.awt.Insets;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import pl.nogacz.snake.application.Resources;
 
 /**
  * @author Dawid Nogacz on 19.05.2019
@@ -200,16 +203,18 @@ public class Board {
     }
 
     private void PopupMenu(){
+        // Create and set up a frame window
         JFrame.setDefaultLookAndFeelDecorated(true);
         JFrame frame = new JFrame("MENU");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setAlwaysOnTop(true);
          
         // Set the panel to add buttons
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(0,1));
-        JLabel backImage =new JLabel(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/background.jpg"));
-        backImage.setOpaque(false);
-        backImage.setSize(500, 500);
+        //JLabel backImage =new JLabel(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/background.jpg"));
+        //backImage.setOpaque(false);
+        //backImage.setSize(600, 600);
       
 
         
@@ -233,10 +238,41 @@ public class Board {
         JButton jb3 = new JButton("CHANGE SETTINGS");
         JButton jb4 = new JButton("EXIT");
         
+        /*
+        tx1.setIcon(new ImageIcon("C:/Users/baydi/481 projeler/JavaSnake/build/resources/main/SNAKE_HEAD_UP.jpg"));
+        System.out.println(Resources.getPath("background.jpg"));
+        //jb1.setIcon(new ImageIcon("C:\Users\baydi\481 projeler\JavaSnake\src\main\resources\BRICK.png"));
+        jb2.setIcon(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/SNAKE_BODY.png"));
+        jb3.setIcon(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/SNAKE_BODY.png"));
+        jb4.setIcon(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/SNAKE_BODY.png"));*/
+        
         jb1.setPreferredSize(new Dimension(300, 30));
         jb2.setPreferredSize(new Dimension(300, 30));
         jb3.setPreferredSize(new Dimension(300, 30));
         jb4.setPreferredSize(new Dimension(300, 30));
+        
+        jb1.addActionListener(new ActionListener(){  
+        	public void actionPerformed(ActionEvent e){  
+        	           frame.setVisible(false);  
+        	}  
+        	}); 
+        
+        jb2.addActionListener(new ActionListener(){  
+        	public void actionPerformed(ActionEvent e){  
+        	           
+        	}  
+        	}); 
+        
+        jb3.addActionListener(new ActionListener(){  
+        	public void actionPerformed(ActionEvent e){  
+        	}  
+        	}); 
+        
+        jb4.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e){  
+ 	           System.exit(0);;  
+        	}  
+        });
         
         /*jb1.setIcon(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/SNAKE_BODY.png"));
         jb1.setIconTextGap(3);
@@ -259,11 +295,12 @@ public class Board {
         panel.add(Box.createRigidArea(new Dimension(0, 60)));
         panel.add(jb4);
         
-        frame.add(backImage);
+        //frame.add(backImage);
         // Set size for the frame
-        frame.setSize(500, 500);
+        frame.setSize(600, 600);
+        //frame.setBackground(bgColor);
         
-         
+         panel.setVisible(true);
         // Set the window to be visible as the default to be false
         frame.add(panel);
         frame.validate();
@@ -291,6 +328,12 @@ public class Board {
 
     private PawnClass getPawn(Coordinates coordinates) {
         return board.get(coordinates);
+    }
+
+    //remove file:/from path
+    public String pathComponent(String filename) {
+        int i = filename.indexOf("C");
+        return (i > -1) ? filename.substring(i) : filename;
     }
 
     public static int getDirection() {
