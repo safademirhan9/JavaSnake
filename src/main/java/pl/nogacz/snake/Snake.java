@@ -7,6 +7,9 @@ import javafx.stage.Stage;
 import pl.nogacz.snake.application.Design;
 import pl.nogacz.snake.board.Board;
 
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime;  
+
 /**
  * @author Dawid Nogacz on 19.05.2019
  */
