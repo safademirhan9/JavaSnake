@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import pl.nogacz.snake.application.Design;
 import pl.nogacz.snake.application.EndGame;
+import pl.nogacz.snake.application.SaveGame;
 import pl.nogacz.snake.pawn.Pawn;
 import pl.nogacz.snake.pawn.PawnClass;
 
@@ -184,6 +185,14 @@ public class Board {
             case DOWN: changeDirection(2); break;
             case LEFT: changeDirection(3); break;
             case RIGHT: changeDirection(4); break;
+
+            case T:
+                isEndGame=true; 
+                new SaveGame("Saving game");
+                break;
+
+            default:
+                    break;
         }
     }
 
