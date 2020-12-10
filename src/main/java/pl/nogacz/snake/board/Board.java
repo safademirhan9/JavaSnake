@@ -102,10 +102,10 @@ public class Board {
                 } else {
                     m.stop();
                     isEndGame = true;
-
                     new EndGame("End game...\n" +
                             "You have " + tailLength + " points. \n" +
                             "Maybe try again? :)");
+                    
                 }
             } else {
                 board.remove(snakeHeadCoordinates);

@@ -17,12 +17,12 @@ public class EndGame {
 
     public EndGame(String message) {
         this.message = message;
-        SoundManager s=new SoundManager("sounds/GameOver9.wav");
-        s.play();
         printDialog();
     }
 
     public void printDialog() {
+        SoundManager s=new SoundManager("sounds/GameOver9.wav");
+        s.play();
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setTitle("JavaSnake");
         alert.setContentText(message);
@@ -39,6 +39,7 @@ public class EndGame {
         } else {
             System.exit(0);
         }
+        s.stop();
     }
 
     public void newGame() {
