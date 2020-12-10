@@ -57,6 +57,22 @@ public class Board {
         mapTask();
     }
 
+    private void newGame(){
+        isEndGame = true;
+        setDefault();
+        addStartEntity();
+        mapTask();
+     }
+
+    private void setDefault(){
+        snakeHeadCoordinates = new Coordinates(10, 10);
+        isEndGame = false;
+        paused = false;
+        direction = 1;
+        tailLength = 0;
+        snakeTail = new ArrayList<Coordinates>();
+    }
+
     private void addStartEntity() {
         board.put(snakeHeadCoordinates, snakeHeadClass);
 
@@ -114,9 +130,9 @@ public class Board {
                 } else {
                     isEndGame = true;
 
-                    /*new EndGame("End game...\n" +
+                    new EndGame("End game...\n" +
                             "You have " + tailLength + " points. \n" +
-                            "Maybe try again? :)");*/
+                            "Maybe try again? :)");
                 }
             } else {
                 board.remove(snakeHeadCoordinates);
@@ -235,8 +251,6 @@ public class Board {
         //backImage.setOpaque(false);
         //backImage.setSize(600, 600);
       
-
-        
         // Set the BoxLayout to be X_AXIS: from left to right
         BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
          
@@ -252,11 +266,15 @@ public class Board {
         
         // Define new buttons and text fields
         JLabel tx1 = new JLabel("Menu");
+        JLabel point = new JLabel("Your Score is " + tailLength);
         JButton jb1 = new JButton("RESUME");
         JButton jb2 = new JButton("NEW GAME");
         JButton jb3 = new JButton("CHANGE SETTINGS");
         JButton jb4 = new JButton("EXIT");
-        
+
+        tx1.setFont(new Font("Serif", Font.PLAIN, 30));
+        point.setFont(new Font("Serif", Font.PLAIN, 20));
+
         /*
         tx1.setIcon(new ImageIcon("C:/Users/baydi/481 projeler/JavaSnake/build/resources/main/SNAKE_HEAD_UP.jpg"));
         System.out.println(Resources.getPath("background.jpg"));
@@ -281,7 +299,7 @@ public class Board {
         	public void actionPerformed(ActionEvent e){  
                         paused = false;
                         frame.setVisible(false);
-                        new EndGame("").newGame();    
+                        newGame();    
         	}  
         	}); 
         
@@ -299,7 +317,8 @@ public class Board {
         /*jb1.setIcon(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/SNAKE_BODY.png"));
         jb1.setIconTextGap(3);
         jb1.setHorizontalAlignment(SwingConstants.LEFT);*/
-
+         tx1.setAlignmentX(Component.CENTER_ALIGNMENT);
+         point.setAlignmentX(Component.CENTER_ALIGNMENT);
          jb1.setAlignmentX(Component.CENTER_ALIGNMENT);
          jb2.setAlignmentX(Component.CENTER_ALIGNMENT);
          jb3.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -308,6 +327,8 @@ public class Board {
      
         // Add buttons to the frame (and spaces between buttons)
         panel.add(tx1);
+        panel.add(Box.createRigidArea(new Dimension(0, 60))); 
+        panel.add(point);
         panel.add(Box.createRigidArea(new Dimension(0, 60)));     
         panel.add(jb1);
         panel.add(Box.createRigidArea(new Dimension(0, 60)));     
@@ -329,8 +350,6 @@ public class Board {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
      }
-
- 
 
     private void changeDirection(int newDirection) {
         if(newDirection == 1 && direction != 2) {
