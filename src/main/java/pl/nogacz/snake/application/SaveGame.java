@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowListener;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -18,19 +17,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import javafx.stage.WindowEvent;
+
 import pl.nogacz.snake.board.Board;
 
 public class SaveGame {
 
     private JFrame frame;
-    private String message;
     private JTextField input;
     private JButton confirm;
     private Board saveBoard;
 
-    public SaveGame(String message, Board saveBoard) {
-        this.message = message;
+    public SaveGame(Board saveBoard) {
         this.saveBoard = saveBoard;
 
         printSaveOption();
