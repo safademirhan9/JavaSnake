@@ -1,11 +1,16 @@
 package pl.nogacz.snake.board;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * @author Dawid Nogacz on 19.05.2019
  */
-public class Coordinates {
+public class Coordinates implements Serializable{
+    /**
+     *
+     */
+    private static final long serialVersionUID = 5853426454011685414L;
     private int x;
     private int y;
 

@@ -18,16 +18,16 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 
-import pl.nogacz.snake.board.Board;
+import pl.nogacz.snake.board.BoardInfo;
 
 public class SaveGame {
 
     private JFrame frame;
     private JTextField input;
     private JButton confirm;
-    private Board saveBoard;
+    private BoardInfo saveBoard;
 
-    public SaveGame(Board saveBoard) {
+    public SaveGame(BoardInfo saveBoard) {
         this.saveBoard = saveBoard;
 
         printSaveOption();

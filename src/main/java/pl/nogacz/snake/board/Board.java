@@ -18,7 +18,9 @@ import java.util.Random;
 /**
  * @author Dawid Nogacz on 19.05.2019
  */
-public class Board {
+public class Board{
+
+
     private HashMap<Coordinates, PawnClass> board = new HashMap<>();
     private Design design;
     private Random random = new Random();
@@ -41,6 +43,23 @@ public class Board {
 
         addStartEntity();
         mapTask();
+    }
+
+    public Board(BoardInfo load){
+
+        board=load.getBoard();
+        isEndGame=load.getEndGame();
+        direction=load.getDirection();
+        tailLength=load.getTailLength();
+        snakeHeadCoordinates=load.getHeadCoordinates();
+        snakeHeadClass=load.getHeadClass();
+        snakeBodyClass=load.getBodyClass();
+        foodClass=load.getFoodClass();
+        snakeTail=load.getSnakeTail();
+
+        displayAllImage();
+        mapTask();
+
     }
 
     private void addStartEntity() {
@@ -187,8 +206,9 @@ public class Board {
             case RIGHT: changeDirection(4); break;
 
             case T:
-                isEndGame=true; 
-                new SaveGame(this);
+                isEndGame=true;
+                BoardInfo BI=new BoardInfo(board, isEndGame, direction, tailLength, snakeHeadCoordinates, snakeHeadClass, snakeBodyClass, foodClass, snakeTail);
+                new SaveGame(BI);
                 break;
 
             default:

@@ -1,5 +1,7 @@
 package pl.nogacz.snake.pawn;
 
+import java.io.Serializable;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import pl.nogacz.snake.application.Resources;
@@ -7,7 +9,11 @@ import pl.nogacz.snake.application.Resources;
 /**
  * @author Dawid Nogacz on 19.05.2019
  */
-public class PawnClass {
+public class PawnClass implements Serializable{
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3297414734292083048L;
     private Pawn pawn;
 
     public PawnClass(Pawn pawn) {
