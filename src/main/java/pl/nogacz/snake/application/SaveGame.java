@@ -1,9 +1,18 @@
 package pl.nogacz.snake.application;
 
-import java.util.Optional;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import javafx.scene.input.MouseEvent;
 
 public class SaveGame {
 
@@ -12,27 +21,85 @@ public class SaveGame {
     public SaveGame(String message) {
         this.message = message;
 
-        printDialog();
+        printSaveOption();
     }
 
-    public void printDialog() {
-        Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.setTitle("JavaSnake");
-        alert.setContentText(message);
+    public void printSaveOption() {
 
-        ButtonType newGameButton = new ButtonType("New game");
-        ButtonType exitButton = new ButtonType("Exit");
+        JFrame frame = new JFrame("Saving the game");
 
-        alert.getButtonTypes().setAll(newGameButton, exitButton);
+        JPanel panel = new JPanel();
 
-        Optional<ButtonType> result = alert.showAndWait();
+        JLabel label = new JLabel("SAVE GAME:");
 
-        if (result.get() == newGameButton){
-            //newGame();
-            System.out.println("TEST");
-        } else {
-            System.exit(0);
-        }
+        JButton confirm = new JButton("Confirm");
+
+        JTextField input = new JTextField("Enter the destination adress here");
+
+        input.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                input.setText("");
+            }
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        confirm.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                String adress=input.getText();
+
+                if(adress.equals(""))
+                    input.setText("Please enter a destination adress");
+
+            }            
+        });
+
+        
+        frame.setSize(500,125);
+        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+
+        input.setPreferredSize(new Dimension(400,25));
+
+        frame.setLocationRelativeTo(null);
+        frame.setAlwaysOnTop(true);
+
+        panel.setPreferredSize(new Dimension(400,400));;
+
+        panel.add(label);
+        panel.add(input);
+        panel.add(confirm);
+
+        frame.add(panel); 
+        
+        frame.setVisible(true);
+
+        panel.setVisible(true);                
+
     }
 
 }
