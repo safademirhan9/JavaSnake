@@ -35,7 +35,7 @@ public class SaveGame {
 
     public void printSaveOption() {
 
-        frame = new JFrame("Saving the game");
+        frame = new JFrame("Save and exit");
 
         JPanel panel = new JPanel();
 
@@ -146,8 +146,7 @@ public class SaveGame {
         input.setPreferredSize(new Dimension(400, 25));
         frame.toFront();
 
-        panel.setPreferredSize(new Dimension(400, 400));
-        ;
+        panel.setPreferredSize(new Dimension(400, 400));        
 
         panel.add(label);
         panel.add(input);
