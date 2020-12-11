@@ -188,7 +188,7 @@ public class Board {
 
             case T:
                 isEndGame=true; 
-                new SaveGame("Saving game");
+                new SaveGame("Saving game",this);
                 break;
 
             default:
