@@ -3,7 +3,6 @@ package pl.nogacz.snake.application;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import pl.nogacz.snake.Snake;
-import pl.nogacz.snake.board.Board;
 
 import java.io.File;
 import java.util.ArrayList;

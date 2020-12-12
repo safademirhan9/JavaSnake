@@ -1,6 +1,5 @@
 package pl.nogacz.snake.board;
 
-import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
