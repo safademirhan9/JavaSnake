@@ -2,7 +2,6 @@ package pl.nogacz.snake.board;
 
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import pl.nogacz.snake.application.Design;
@@ -15,8 +14,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,23 +65,6 @@ public class Board {
         this.design = design;
         addStartEntity();
         mapTask();
-    }
-
-    public Board(BoardInfo load, Design design) {       
-
-        board = load.getBoard();
-        isEndGame = load.getEndGame();
-        direction = load.getDirection();
-        tailLength = load.getTailLength();
-        snakeHeadCoordinates = load.getHeadCoordinates();
-        snakeHeadClass = load.getHeadClass();
-        snakeBodyClass = load.getBodyClass();
-        foodClass = load.getFoodClass();
-        snakeTail = load.getSnakeTail();
-
-        displayAllImage();
-        mapTask();
-
     }
 
     public void getMessage(int a,int b){
@@ -281,8 +265,10 @@ public class Board {
             case Q: System.exit(0); break;           
 
             case T:
+
+                cancel=true;
                 isPaused=true;
-                BoardInfo BI=new BoardInfo(board, isEndGame, direction, tailLength, snakeHeadCoordinates, snakeHeadClass, snakeBodyClass, foodClass, snakeTail);
+                BoardInfo BI=new BoardInfo(board, direction, tailLength, snakeHeadCoordinates, snakeHeadClass, snakeBodyClass, foodClass, snakeTail);
                 
                 JFrame saveFrame = new JFrame("Saving the game");
 
@@ -417,6 +403,9 @@ public class Board {
                 break;
             
             case L:
+                
+                removeAllImage();
+                cancel=true;
                 isPaused=true;
 
                 JFrame frame = new JFrame("Loading the game");
@@ -470,7 +459,18 @@ public class Board {
                             input.setText("Please enter a destination adress");
 
                         else
-                            loadGame(adress);
+                            cancel=false;
+
+                            if(startLoad(adress)){
+
+                                getMessage(1, 0);                              
+
+                            }
+
+                            else
+                                getMessage(1, 1);
+
+                                frame.dispose();
 
                     }
                 });
@@ -491,8 +491,8 @@ public class Board {
 
 				@Override
 				public void windowClosed(WindowEvent e) {
-                    isPaused=false;
-                    mapTask();
+                    if(cancel)
+                        getMessage(1, -1);
 					
 				}
 
@@ -542,9 +542,35 @@ public class Board {
         }
     }
 
-    private void loadGame(String adress){
+    private boolean startLoad(String adress){
 
+        FileInputStream fi;
+        ObjectInputStream in;
 
+        try {
+
+            fi=new FileInputStream(adress);
+            in=new ObjectInputStream(fi);
+
+            BoardInfo BI=(BoardInfo)in.readObject();
+
+            in.close();
+            fi.close();
+
+            this.board=BI.getBoard();
+            direction=BI.getDirection();
+            this.tailLength=BI.getTailLength();
+            this.snakeHeadCoordinates=BI.getHeadCoordinates();
+            this.snakeHeadClass=BI.getHeadClass();
+            this.snakeBodyClass=BI.getBodyClass();
+            this.foodClass=BI.getFoodClass();
+            this.snakeTail=BI.getSnakeTail();
+            
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
 
     }
 
@@ -552,10 +578,6 @@ public class Board {
 
         FileOutputStream fo;
         ObjectOutputStream out;
-        
-        boolean success=false;
-
-        while(!success){
 
             try {
                 fo = new FileOutputStream(adress);
@@ -565,15 +587,13 @@ public class Board {
                 fo.close();
                 out.close();
 
-                success=true;
-
             } catch (IOException e) {
                 return false;
             }
 
-        }
+        
 
-        return success;
+        return true;
 
     }
 

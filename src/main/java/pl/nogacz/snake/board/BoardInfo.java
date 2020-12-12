@@ -15,8 +15,6 @@ public class BoardInfo implements Serializable{
 
     private HashMap<Coordinates, PawnClass> board;
 
-    private boolean isEndGame;
-
     private int direction;// 1 - UP || 2 - BOTTOM || 3 - LEFT || 4 - RIGHT
     private int tailLength;
 
@@ -30,10 +28,9 @@ public class BoardInfo implements Serializable{
 
 
 
-    public BoardInfo(HashMap<Coordinates, PawnClass> board,boolean isEndGame,int direction,int tailLength,Coordinates snakeHeadCoordinates,PawnClass snakeHeadClass,PawnClass snakeBodyClass,PawnClass foodClass,ArrayList<Coordinates> snakeTail){
+    public BoardInfo(HashMap<Coordinates, PawnClass> board,int direction,int tailLength,Coordinates snakeHeadCoordinates,PawnClass snakeHeadClass,PawnClass snakeBodyClass,PawnClass foodClass,ArrayList<Coordinates> snakeTail){
 
         this.board=board;
-        this.isEndGame=false;
         this.direction=direction;
         this.tailLength=tailLength;
         this.snakeHeadCoordinates=snakeHeadCoordinates;
@@ -45,7 +42,6 @@ public class BoardInfo implements Serializable{
     }
 
     public HashMap<Coordinates, PawnClass> getBoard(){return board;}
-    public boolean getEndGame(){return isEndGame;}
     public int getDirection(){return direction;}
     public int getTailLength(){return tailLength;}
     public Coordinates getHeadCoordinates(){return snakeHeadCoordinates;}
