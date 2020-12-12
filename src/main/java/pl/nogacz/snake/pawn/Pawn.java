@@ -4,13 +4,17 @@ package pl.nogacz.snake.pawn;
  * @author Dawid Nogacz on 19.05.2019
  */
 public enum Pawn {
-    FOOD,
+    FRESHFOOD,
+    ROTTENFOOD,
     BRICK,
     SNAKE_HEAD,
     SNAKE_BODY;
 
-    public boolean isFood() {
-        return this == FOOD;
+    public boolean isFreshFood() {
+        return this == FRESHFOOD;
+    }
+    public boolean isRottenFood() {
+        return this == ROTTENFOOD;
     }
 
     public boolean isHead() {

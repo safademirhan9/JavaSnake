@@ -27,11 +27,16 @@ public class Board {
     private static int direction = 1; // 1 - UP || 2 - BOTTOM || 3 - LEFT || 4 - RIGHT
     private int tailLength = 0;
 
+    private int counter= 0; // To make disappear rotten food after a while
+
     private Coordinates snakeHeadCoordinates = new Coordinates(10, 10);
+    private Coordinates rottenFoodCoordinates = null;
 
     private PawnClass snakeHeadClass = new PawnClass(Pawn.SNAKE_HEAD);
     private PawnClass snakeBodyClass = new PawnClass(Pawn.SNAKE_BODY);
-    private PawnClass foodClass = new PawnClass(Pawn.FOOD);
+    private PawnClass freshFoodClass = new PawnClass(Pawn.FRESHFOOD);
+    private PawnClass rottenFoodClass = new PawnClass(Pawn.ROTTENFOOD);
+
 
     private ArrayList<Coordinates> snakeTail = new ArrayList<>();
 
@@ -52,7 +57,7 @@ public class Board {
             board.put(new Coordinates(i, 21), new PawnClass(Pawn.BRICK));
         }
 
-        addEat();
+        addEat(true); //true for fresh food
         displayAllImage();
     }
 
@@ -83,10 +88,25 @@ public class Board {
         }
     }
 
-    private void moveSnakeHead(Coordinates coordinates) {
+    private void moveSnakeHead(Coordinates coordinates) { // his head will be at foods location
         if(coordinates.isValid()) {
+            if(rottenFoodCoordinates == null){ // There is no rotten food on the field
+                int randomnum = random.nextInt(10);
+                if( randomnum == 1 ){ // Randomness
+                    addEat(false);
+                } 
+            }
+            else{   
+                System.out.println(counter);
+                if(counter < 20) counter++;
+                if(counter == 20){ // Disappear after 20 snake moves.
+                    counter = 0;
+                    board.remove(rottenFoodCoordinates);
+                    rottenFoodCoordinates=null;
+                }
+            } 
             if(isFieldNotNull(coordinates)) {
-                if(getPawn(coordinates).getPawn().isFood()) {
+                if(getPawn(coordinates).getPawn().isFreshFood()) {
                     board.remove(snakeHeadCoordinates);
                     board.put(snakeHeadCoordinates, snakeBodyClass);
                     board.put(coordinates, snakeHeadClass);
@@ -95,10 +115,33 @@ public class Board {
 
                     snakeHeadCoordinates = coordinates;
 
-                    addEat();
+                    addEat(true);
+                }
+                else if(getPawn(coordinates).getPawn().isRottenFood()){
+                    if(tailLength == 0){
+                        isEndGame = true;
+
+                        new EndGame("End game...\n" +
+                            "You have " + tailLength + " points. \n" +
+                            "Maybe try again? :)");
+                    }
+
+                    board.remove(snakeHeadCoordinates);
+                    board.put(snakeHeadCoordinates, snakeBodyClass);
+                    board.put(coordinates, snakeHeadClass);
+                    snakeTail.add(snakeHeadCoordinates);
+                    board.remove(snakeTail.get(0));
+                    snakeTail.remove(snakeTail.get(0)); 
+                    board.remove(snakeTail.get(0));                 
+                    snakeTail.remove(snakeTail.get(0));
+                    tailLength--;
+
+                    snakeHeadCoordinates = coordinates;
+                    counter = 0;
+                    rottenFoodCoordinates=null; 
+
                 } else {
                     isEndGame = true;
-
                     new EndGame("End game...\n" +
                             "You have " + tailLength + " points. \n" +
                             "Maybe try again? :)");
@@ -136,14 +179,19 @@ public class Board {
         snakeTail.add(coordinates);
     }
 
-    private void addEat() {
+    private void addEat(boolean bool) { // true for fresh foods, false for rotten foods for.
         Coordinates foodCoordinates;
 
         do {
             foodCoordinates = new Coordinates(random.nextInt(21), random.nextInt(21));
         } while(isFieldNotNull(foodCoordinates));
 
-        board.put(foodCoordinates, foodClass);
+        if(bool)
+            board.put(foodCoordinates, freshFoodClass);
+        else{    
+            board.put(foodCoordinates, rottenFoodClass);  
+            rottenFoodCoordinates = foodCoordinates;
+        }      
     }
 
     private void mapTask() {
