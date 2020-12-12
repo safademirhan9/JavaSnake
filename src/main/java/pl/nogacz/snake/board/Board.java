@@ -26,6 +26,8 @@ public class Board {
 
     private static int direction = 1; // 1 - UP || 2 - BOTTOM || 3 - LEFT || 4 - RIGHT
     private int tailLength = 0;
+    
+    private final String endGameMessage = "End game...\n" + "You have " + tailLength + " points. \n" + "Maybe try again? :)";
 
     private Coordinates snakeHeadCoordinates = new Coordinates(10, 10);
     
@@ -143,16 +145,11 @@ public class Board {
                 } 
                 
                 else if(snakeHitsRottenApple(coordinates)){ 
-                    new EndGame("End game...\n" +
-                    "You have " + tailLength + " points. \n" +
-                    "Maybe try again? :)");
+                    new EndGame(endGameMessage);
                 }
                 else {
                     isEndGame = true;
-                    new EndGame("End game...\n" +
-                            "You have " + tailLength + " points. \n" +
-                            "Maybe try again? :)");
-                            
+                    new EndGame(endGameMessage);
                 }
             } else {
                 board.remove(snakeHeadCoordinates);
