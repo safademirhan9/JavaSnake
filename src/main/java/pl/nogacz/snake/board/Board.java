@@ -122,6 +122,11 @@ public class Board {
         }
     }
 
+    private boolean snakeHitsRottenApple(Coordinates coordinates){ // if snake hits rotten apple game ends.
+        return getPawn(coordinates).getPawn().isRottenApple() || getPawn(coordinates).getPawn().isRottenApple2() 
+               || getPawn(coordinates).getPawn().isRottenApple3();
+    }
+
     private void moveSnakeHead(Coordinates coordinates) {
         if(coordinates.isValid()) {
             if(isFieldNotNull(coordinates)) {
@@ -137,7 +142,7 @@ public class Board {
                     addEat();                    
                 } 
                 
-                else if(getPawn(coordinates).getPawn().isRottenApple() || getPawn(coordinates).getPawn().isRottenApple2() || getPawn(coordinates).getPawn().isRottenApple3()){ // if snake hits rotten apple game ends.
+                else if(snakeHitsRottenApple(coordinates)){ 
                     new EndGame("End game...\n" +
                     "You have " + tailLength + " points. \n" +
                     "Maybe try again? :)");
@@ -162,22 +167,26 @@ public class Board {
         }
     }
 
+    private boolean spawnRottenApple(int i){ // control for randomly chosen spawning rotten apple time
+        return Math.abs(lastSpawnTimesOfApples[i] - System.currentTimeMillis()) / 1000 == newRandomSpawnTimesOfApples[i];
+    }
+
     private void spawnRottenApple(){
-        if(Math.abs(lastSpawnTimesOfApples[0] - System.currentTimeMillis()) / 1000 == newRandomSpawnTimesOfApples[0]){
+        if(spawnRottenApple(0)){
             addRottenApples();
             rottenApples.add(currentRottenAppleCoordinates[0]);
             lastSpawnTimesOfApples[0] = System.currentTimeMillis();
             newRandomSpawnTimesOfApples[0] = random.nextInt(9)+1;
         }
 
-        if(Math.abs(lastSpawnTimesOfApples[1] - System.currentTimeMillis()) / 1000 == newRandomSpawnTimesOfApples[1]){
+        if(spawnRottenApple(1)){
             addRottenApples2();
             rottenApples2.add(currentRottenAppleCoordinates[1]);
             lastSpawnTimesOfApples[1] = System.currentTimeMillis();
             newRandomSpawnTimesOfApples[1] = random.nextInt(20)+1;
         }
 
-        if(Math.abs(lastSpawnTimesOfApples[2] - System.currentTimeMillis()) / 1000 == newRandomSpawnTimesOfApples[2]){
+        if(spawnRottenApple(2)){
             addRottenApples3();
             rottenApples3.add(currentRottenAppleCoordinates[2]);
             lastSpawnTimesOfApples[2] = System.currentTimeMillis();
@@ -185,28 +194,35 @@ public class Board {
         }
     }
 
+    private boolean dissappearRottenAppleForFirstTime(int i){ // control for randomly chosen dissappearing rotten apple for the first time
+        return rottenApples.size() == 1 && dissappearRottenApplesCheck[i];
+    }
+
+    private boolean dissappearRottenApple(int i){ // control for randomly chosen dissappearing rotten apple time
+        return Math.abs(lastDissappearTimesOfApples[i] - System.currentTimeMillis()) / 1000 == newRandomDissappearTimesOfApples[i];
+    }
+
     private void disappearRottenApple(){
-        if(rottenApples.size() == 1 && dissappearRottenApplesCheck[0]){ // for initial dissappear process apple1.
+        if(dissappearRottenAppleForFirstTime(0)){ // for initial dissappear process apple1.
             newRandomDissappearTimesOfApples[0] = random.nextInt(9) + 1;
             lastDissappearTimesOfApples[0] = System.currentTimeMillis();
             dissappearRottenApplesCheck[0] = false;
-
         }
 
-        if(rottenApples2.size() == 1 && dissappearRottenApplesCheck[1]){ // for initial dissappear process apple2.
+        if(dissappearRottenAppleForFirstTime(1)){ // for initial dissappear process apple2.
             newRandomDissappearTimesOfApples[1] = random.nextInt(9) + 1;
             lastDissappearTimesOfApples[1] = System.currentTimeMillis();
             dissappearRottenApplesCheck[1] = false;
         }
 
-        if(rottenApples3.size() == 1 && dissappearRottenApplesCheck[2]){ // for initial dissappear process apple3.
+        if(dissappearRottenAppleForFirstTime(2)){ // for initial dissappear process apple3.
             newRandomDissappearTimesOfApples[2] = random.nextInt(10) + 1;
             lastDissappearTimesOfApples[2] = System.currentTimeMillis();
             dissappearRottenApplesCheck[2] = false;
         }
 
 
-        if(Math.abs(lastDissappearTimesOfApples[0] - System.currentTimeMillis()) / 1000 == newRandomDissappearTimesOfApples[0]){// apple1
+        if(dissappearRottenApple(0)){
             if(!rottenApples.isEmpty()){
                 board.remove(rottenApples.get(0));
                 design.removePawn(rottenApples.get(0));
@@ -218,7 +234,7 @@ public class Board {
             }
         }
 
-        if(Math.abs(lastDissappearTimesOfApples[1] - System.currentTimeMillis()) / 1000 == newRandomDissappearTimesOfApples[1]){// apple2
+        if(dissappearRottenApple(1)){
             if(!rottenApples2.isEmpty()){
                 board.remove(rottenApples2.get(0));
                 design.removePawn(rottenApples2.get(0));
@@ -230,7 +246,7 @@ public class Board {
             }
         }
 
-        if(Math.abs(lastDissappearTimesOfApples[2] - System.currentTimeMillis()) / 1000 == newRandomDissappearTimesOfApples[2]){// apple3
+        if(dissappearRottenApple(2)){
             if(!rottenApples3.isEmpty()){
                 board.remove(rottenApples3.get(0));
                 design.removePawn(rottenApples3.get(0));
