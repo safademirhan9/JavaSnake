@@ -36,6 +36,7 @@ public class Board {
     private Random random = new Random();
 
     private boolean isEndGame = false;
+    private boolean isNewGame = false;
     //added
     private volatile boolean   paused = false;
 
@@ -58,22 +59,31 @@ public class Board {
     }
 
     private void newGame(){
-        isEndGame = true;
+        isNewGame = true;
+        isEndGame = false;
         setDefault();
         addStartEntity();
         mapTask();
      }
 
     private void setDefault(){
+        design = new Design();
         snakeHeadCoordinates = new Coordinates(10, 10);
         isEndGame = false;
         paused = false;
         direction = 1;
         tailLength = 0;
         snakeTail = new ArrayList<Coordinates>();
+        board = new HashMap<Coordinates, PawnClass>();
+        
     }
 
     private void addStartEntity() {
+       /*if(isNewGame){
+            board.remove(snakeHeadCoordinates);
+            //board.put(snakeHeadCoordinates, snakeHeadClass);
+        }
+       else*/
         board.put(snakeHeadCoordinates, snakeHeadClass);
 
         for(int i = 0; i < 22; i++) {
@@ -129,10 +139,8 @@ public class Board {
                     addEat();
                 } else {
                     isEndGame = true;
-
-                    new EndGame("End game...\n" +
-                            "You have " + tailLength + " points. \n" +
-                            "Maybe try again? :)");
+                    //when game ends new manu is popped
+                   PopupMenu();
                 }
             } else {
                 board.remove(snakeHeadCoordinates);
@@ -330,8 +338,10 @@ public class Board {
         panel.add(Box.createRigidArea(new Dimension(0, 60))); 
         panel.add(point);
         panel.add(Box.createRigidArea(new Dimension(0, 60)));     
-        panel.add(jb1);
-        panel.add(Box.createRigidArea(new Dimension(0, 60)));     
+        if(!isEndGame){
+        panel.add(jb1);     
+        panel.add(Box.createRigidArea(new Dimension(0, 60)));
+        }     
         panel.add(jb2);
         panel.add(Box.createRigidArea(new Dimension(0, 60)));
         panel.add(jb3);
