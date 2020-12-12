@@ -20,5 +20,15 @@ gradle run
 ## Control
 WASD or arrows
 
+## Save
+Press 'T' anywhere in game to save the game.
+
+## Load
+Press 'L' anywhere in game to load a game.
+
+## Save&Load example
+Enter your save\load destination as shown.
+<destination adress>\\<fileName>
+
 ## Author
 Dawid "Sloenthran" Nogacz
