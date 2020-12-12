@@ -26,8 +26,6 @@ public class Board {
 
     private static int direction = 1; // 1 - UP || 2 - BOTTOM || 3 - LEFT || 4 - RIGHT
     private int tailLength = 0;
-    
-    private final String endGameMessage = "End game...\n" + "You have " + tailLength + " points. \n" + "Maybe try again? :)";
 
     private Coordinates snakeHeadCoordinates = new Coordinates(10, 10);
     
@@ -129,6 +127,11 @@ public class Board {
                || getPawn(coordinates).getPawn().isRottenApple3();
     }
 
+
+    private String endGameMessage(int point){
+        return "End game...\n" + "You have " + point + " points. \n" + "Maybe try again? :)";
+    }
+
     private void moveSnakeHead(Coordinates coordinates) {
         if(coordinates.isValid()) {
             if(isFieldNotNull(coordinates)) {
@@ -145,11 +148,11 @@ public class Board {
                 } 
                 
                 else if(snakeHitsRottenApple(coordinates)){ 
-                    new EndGame(endGameMessage);
+                    new EndGame(endGameMessage(tailLength));
                 }
                 else {
                     isEndGame = true;
-                    new EndGame(endGameMessage);
+                    new EndGame(endGameMessage(tailLength));
                 }
             } else {
                 board.remove(snakeHeadCoordinates);
