@@ -25,7 +25,15 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import pl.nogacz.snake.application.Resources;
-import pl.nogacz.snake.application.EndGame;
+import pl.nogacz.snake.application.Resources;
+import pl.nogacz.snake.Snake;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Optional;
+import javax.imageio.*;
+import javafx.scene.image.Image;
+
+
 
 /**
  * @author Dawid Nogacz on 19.05.2019
@@ -74,16 +82,16 @@ public class Board {
         direction = 1;
         tailLength = 0;
         snakeTail = new ArrayList<Coordinates>();
-        board = new HashMap<Coordinates, PawnClass>();
+        //board = new HashMap<Coordinates, PawnClass>();
         
     }
 
     private void addStartEntity() {
-       /*if(isNewGame){
+       if(isNewGame){
             board.remove(snakeHeadCoordinates);
-            //board.put(snakeHeadCoordinates, snakeHeadClass);
+            snakeHeadCoordinates = new Coordinates(10, 10);
         }
-       else*/
+       
         board.put(snakeHeadCoordinates, snakeHeadClass);
 
         for(int i = 0; i < 22; i++) {
@@ -114,6 +122,7 @@ public class Board {
             design.addPawn(entry.getKey(), entry.getValue());
         }
     }
+  
 
     private void moveSnake() {
         switch(direction) {
@@ -140,7 +149,7 @@ public class Board {
                 } else {
                     isEndGame = true;
                     //when game ends new manu is popped
-                   PopupMenu();
+                   Menu();
                 }
             } else {
                 board.remove(snakeHeadCoordinates);
@@ -239,119 +248,136 @@ public class Board {
             case DOWN: changeDirection(2); break;
             case LEFT: changeDirection(3); break;
             case RIGHT: changeDirection(4); break;
-            case ESCAPE : PopupMenu(); break;
+            case ESCAPE : Menu(); break;
 
         }
     }
 
-    private void PopupMenu(){
+    private void Menu(){
+        System.out.println();
         paused = true;
-        // Create and set up a frame window
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        JFrame frame = new JFrame("MENU");
+        JFrame frame = new JFrame("MENU");       
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setAlwaysOnTop(true);
+        /*img = ImageIO.read(getClass().getResourceAsStream(IMG_PATH));*/
          
         // Set the panel to add buttons
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel();/* {  
+            public void paintComponent(Graphics g) {  
+                try{
+                 Image img = new Image(pathComponent("background.jpg"));  
+                    g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);  
+                    /*final Canvas canvas = new Canvas(W * NUM_IMGS, H);
+                    final GraphicsContext gc = canvas.getGraphicsContext2D();
+                    gc.setFill(Color.GOLD);
+                    gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                }catch(Exception e){
+
+                }
+            }  
+        }; */
+
         panel.setLayout(new GridLayout(0,1));
-        //JLabel backImage =new JLabel(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/background.jpg"));
-        //backImage.setOpaque(false);
-        //backImage.setSize(600, 600);
-      
+           
         // Set the BoxLayout to be X_AXIS: from left to right
         BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
-         
-        // Set the Boxayout to be Y_AXIS from top to down
-        //BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
- 
+
         panel.setLayout(boxlayout);
          
         // Set border for the panel
-        //panel.setBorder(new EmptyBorder(new Insets(50, 50, 50, 50)));
         panel.setBorder(new EmptyBorder(new Insets(50, 100, 50, 100)));   
        
-        
         // Define new buttons and text fields
         JLabel tx1 = new JLabel("Menu");
         JLabel point = new JLabel("Your Score is " + tailLength);
-        JButton jb1 = new JButton("RESUME");
-        JButton jb2 = new JButton("NEW GAME");
-        JButton jb3 = new JButton("CHANGE SETTINGS");
-        JButton jb4 = new JButton("EXIT");
+        JButton resumeButton = new JButton("RESUME");
+        JButton newGameButton = new JButton("NEW GAME");        
+        JButton settingsButton = new JButton("CHANGE SETTINGS");
+        JButton exitButton = new JButton("EXIT");
 
         tx1.setFont(new Font("Serif", Font.PLAIN, 30));
         point.setFont(new Font("Serif", Font.PLAIN, 20));
-
-        /*
-        tx1.setIcon(new ImageIcon("C:/Users/baydi/481 projeler/JavaSnake/build/resources/main/SNAKE_HEAD_UP.jpg"));
-        System.out.println(Resources.getPath("background.jpg"));
-        //jb1.setIcon(new ImageIcon("C:\Users\baydi\481 projeler\JavaSnake\src\main\resources\BRICK.png"));
-        jb2.setIcon(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/SNAKE_BODY.png"));
-        jb3.setIcon(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/SNAKE_BODY.png"));
-        jb4.setIcon(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/SNAKE_BODY.png"));*/
         
-        jb1.setPreferredSize(new Dimension(300, 30));
-        jb2.setPreferredSize(new Dimension(300, 30));
-        jb3.setPreferredSize(new Dimension(300, 30));
-        jb4.setPreferredSize(new Dimension(300, 30));
+        resumeButton.setPreferredSize(new Dimension(300, 30));
+        newGameButton.setPreferredSize(new Dimension(300, 30));
+        settingsButton.setPreferredSize(new Dimension(300, 30));
+        exitButton.setPreferredSize(new Dimension(300, 30));
         
-        jb1.addActionListener(new ActionListener(){  
+        resumeButton.addActionListener(new ActionListener(){  
         	public void actionPerformed(ActionEvent e){  
                        paused = false;
         	           frame.setVisible(false);  
         	}  
         	}); 
         
-        jb2.addActionListener(new ActionListener(){  
+        newGameButton.addActionListener(new ActionListener(){  
         	public void actionPerformed(ActionEvent e){  
                         paused = false;
                         frame.setVisible(false);
-                        newGame();    
+                        restartApplication();
+                        /*EndGame end = new EndGame("end");
+                        end.newGame();
+                        /*Snake s = new Snake();
+                        s.newGame(); */ 
         	}  
-        	}); 
+            }); 
         
-        jb3.addActionListener(new ActionListener(){  
+        settingsButton.addActionListener(new ActionListener(){  
         	public void actionPerformed(ActionEvent e){  
         	}  
         	}); 
         
-        jb4.addActionListener(new ActionListener() {
+        exitButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e){  
  	           System.exit(0);;  
         	}  
         });
-        
-        /*jb1.setIcon(new ImageIcon("C:/Users/baydi/eclipse-workspace/deneme/src/resources/SNAKE_BODY.png"));
-        jb1.setIconTextGap(3);
-        jb1.setHorizontalAlignment(SwingConstants.LEFT);*/
-         tx1.setAlignmentX(Component.CENTER_ALIGNMENT);
-         point.setAlignmentX(Component.CENTER_ALIGNMENT);
-         jb1.setAlignmentX(Component.CENTER_ALIGNMENT);
-         jb2.setAlignmentX(Component.CENTER_ALIGNMENT);
-         jb3.setAlignmentX(Component.CENTER_ALIGNMENT);
-         jb4.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-     
+        tx1.setIcon(new ImageIcon(pathComponent("FOOD.png")));
+        tx1.setIconTextGap(3);
+        tx1.setHorizontalAlignment(SwingConstants.LEFT);
+        tx1.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        point.setIcon(new ImageIcon(pathComponent("SNAKE_HEAD_UP.png")));
+        point.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        resumeButton.setIcon(new ImageIcon(pathComponent("SNAKE_BODY.png")));
+        resumeButton.setIconTextGap(3);
+        resumeButton.setHorizontalAlignment(SwingConstants.LEFT);
+        resumeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        newGameButton.setIcon(new ImageIcon(pathComponent("SNAKE_BODY.png")));
+        newGameButton.setIconTextGap(3);
+        newGameButton.setHorizontalAlignment(SwingConstants.LEFT);
+        newGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        settingsButton.setIcon(new ImageIcon(pathComponent("SNAKE_BODY.png")));
+        settingsButton.setIconTextGap(3);
+        settingsButton.setHorizontalAlignment(SwingConstants.LEFT);
+        settingsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        exitButton.setIcon(new ImageIcon(pathComponent("SNAKE_BODY.png")));
+        exitButton.setIconTextGap(3);
+        exitButton.setHorizontalAlignment(SwingConstants.LEFT);
+        exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+               
         // Add buttons to the frame (and spaces between buttons)
         panel.add(tx1);
         panel.add(Box.createRigidArea(new Dimension(0, 60))); 
         panel.add(point);
         panel.add(Box.createRigidArea(new Dimension(0, 60)));     
         if(!isEndGame){
-        panel.add(jb1);     
+        panel.add(resumeButton);     
         panel.add(Box.createRigidArea(new Dimension(0, 60)));
         }     
-        panel.add(jb2);
+        panel.add(newGameButton);
         panel.add(Box.createRigidArea(new Dimension(0, 60)));
-        panel.add(jb3);
+        panel.add(settingsButton);
         panel.add(Box.createRigidArea(new Dimension(0, 60)));
-        panel.add(jb4);
+        panel.add(exitButton);
         
-        //frame.add(backImage);
         // Set size for the frame
-        frame.setSize(600, 600);
-        //frame.setBackground(bgColor);
+        frame.setSize(600, 700);
         
          panel.setVisible(true);
         // Set the window to be visible as the default to be false
@@ -360,6 +386,33 @@ public class Board {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
      }
+
+     public void restartApplication()
+    {       System.out.println("deneme-----------------------------------------------");
+        try {
+            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+            System.out.println("javaBin    "+javaBin);
+            final File currentJar = new File(Snake.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+            /* is it a jar file? */
+            if(!currentJar.getName().endsWith(".jar"))
+                return;
+
+            /* Build command: java -jar application.jar */
+            final ArrayList<String> command = new ArrayList<String>();
+            command.add(javaBin);
+            command.add("-jar");
+            command.add(currentJar.getPath());
+
+            final ProcessBuilder builder = new ProcessBuilder(command);
+            builder.start();
+            System.exit(0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+   
 
     private void changeDirection(int newDirection) {
         if(newDirection == 1 && direction != 2) {
@@ -383,12 +436,12 @@ public class Board {
 
     //remove file:/from path
     public String pathComponent(String filename) {
-        int i = filename.indexOf("C");
-        return (i > -1) ? filename.substring(i) : filename;
+        String path = Resources.getPath(filename);
+        return path.substring(path.indexOf("/")+1);
     }
 
     public static int getDirection() {
         return direction;
     }
-
+  
 }

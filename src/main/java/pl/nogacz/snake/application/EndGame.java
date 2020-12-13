@@ -43,7 +43,7 @@ public class EndGame {
         restartApplication();
     }
 
-    public void restartApplication()
+    private void restartApplication()
     {
         try {
             final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
