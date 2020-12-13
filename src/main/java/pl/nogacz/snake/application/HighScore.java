@@ -1,8 +1,11 @@
 package pl.nogacz.snake.application;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class HighScore {
@@ -33,6 +36,32 @@ public class HighScore {
         }
         if (scores.size() > HIGH_SCORE_COUNT)
             scores = new ArrayList<>(scores.subList(0, HIGH_SCORE_COUNT));
+        return truncateScores(scores);
+    }
+
+    private static ArrayList<Object[]> truncateScores(ArrayList<Object[]> scores) {
+        if (scores.size() > HIGH_SCORE_COUNT)
+            scores = new ArrayList<>(scores.subList(0, HIGH_SCORE_COUNT));
         return scores;
+    }
+
+    public static boolean isHighScore(int score) {
+        return readScores().stream().anyMatch(i -> (int)i[1] < score); //if any i[1](score) is smaller, return true
+    }
+
+    public static void writeScore(String name, int score) {
+        ArrayList<Object[]> scores = readScores();
+        scores.add(new Object[] {name, score});
+        scores.sort((o1, o2) -> (int)o2[1] - (int)o1[1]);
+        truncateScores(scores);
+        try {
+            FileWriter writer = new FileWriter(HIGH_SCORE_FILE, false);
+            for (Object[] o : scores) {
+                writer.write(o[0] + "\t" + o[1] + "\n");
+            }
+            writer.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
