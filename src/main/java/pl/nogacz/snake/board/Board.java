@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import pl.nogacz.snake.application.Design;
 import pl.nogacz.snake.application.EndGame;
+import pl.nogacz.snake.application.HighScore;
 import pl.nogacz.snake.pawn.Pawn;
 import pl.nogacz.snake.pawn.PawnClass;
 
@@ -23,6 +24,7 @@ public class Board {
     private Random random = new Random();
 
     private boolean isEndGame = false;
+    private boolean isShowingHighScores = false;
 
     private static int direction = 1; // 1 - UP || 2 - BOTTOM || 3 - LEFT || 4 - RIGHT
     private int tailLength = 0;
@@ -164,7 +166,9 @@ public class Board {
             @Override
             public void handle(WorkerStateEvent event) {
                 if(!isEndGame) {
-                    checkMap();
+                    if (!isShowingHighScores) {
+                        checkMap();
+                    }
                     mapTask();
                 }
             }
@@ -184,6 +188,8 @@ public class Board {
             case DOWN: changeDirection(2); break;
             case LEFT: changeDirection(3); break;
             case RIGHT: changeDirection(4); break;
+
+            case H: showHighScores(); break;
         }
     }
 
@@ -197,6 +203,12 @@ public class Board {
         } else if(newDirection == 4 && direction != 3) {
             direction = 4;
         }
+    }
+
+    private void showHighScores() {
+        isShowingHighScores = true;
+        HighScore.showScores();
+        isShowingHighScores = false;
     }
 
     private boolean isFieldNotNull(Coordinates coordinates) {

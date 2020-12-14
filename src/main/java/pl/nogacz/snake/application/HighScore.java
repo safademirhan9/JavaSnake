@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public class HighScore {
     private static final File HIGH_SCORE_FILE = new File(Paths.get(".", "high.scores").toUri()); //text file, name and score per line, tab seperated
@@ -74,9 +75,8 @@ public class HighScore {
         //create a single string of scores: [<score1>] <name1>\n[<score2>] <name2>\n... etc.
         String stringOfScores = scores.stream().map(x -> String.format("[%0"+numberOfDigits+"d] %s", x[1], x[0])).collect(Collectors.joining("\n"));
 
-        Alert highscores = new Alert(Alert.AlertType.NONE);
+        Alert highscores = new Alert(Alert.AlertType.NONE, stringOfScores, ButtonType.CLOSE);
         highscores.setTitle("Highscores");
-        highscores.setContentText(stringOfScores);
         highscores.showAndWait();
     }
 }
