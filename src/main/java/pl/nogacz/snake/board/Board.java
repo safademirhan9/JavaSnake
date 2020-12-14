@@ -101,9 +101,7 @@ public class Board {
                 } else {
                     isEndGame = true;
 
-                    new EndGame("End game...\n" +
-                            "You have " + tailLength + " points. \n" +
-                            "Maybe try again? :)");
+                    new EndGame(tailLength);
                 }
             } else {
                 board.remove(snakeHeadCoordinates);

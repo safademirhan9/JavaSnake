@@ -37,8 +37,6 @@ public class HighScore {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        if (scores.size() > HIGH_SCORE_COUNT)
-            scores = new ArrayList<>(scores.subList(0, HIGH_SCORE_COUNT));
         return truncateScores(scores);
     }
 
@@ -56,7 +54,7 @@ public class HighScore {
         ArrayList<Object[]> scores = readScores();
         scores.add(new Object[] {name, score});
         scores.sort((o1, o2) -> (int)o2[1] - (int)o1[1]);
-        truncateScores(scores);
+        scores = truncateScores(scores);
         try {
             FileWriter writer = new FileWriter(HIGH_SCORE_FILE, false);
             for (Object[] o : scores) {
