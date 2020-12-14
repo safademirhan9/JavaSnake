@@ -12,12 +12,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 public class HighScore {
-    private static final File HIGH_SCORE_FILE = new File(Paths.get(".", "high.scores").toUri()); //text file, name and score per line, tab seperated
+    private static final File HIGH_SCORE_FILE = new File(Paths.get(".", "high.scores").toUri()); //text file, score and name per line, tab seperated
     private static final int HIGH_SCORE_COUNT = 10;
 
     private HighScore() { }
 
-    private static ArrayList<Object[]> readScores() { // returns an ArrayList of [String, Integer]
+    private static ArrayList<Object[]> readScores() { // returns an ArrayList of [Integer, String]
         if (!HIGH_SCORE_FILE.exists()) {
             try {
                 HIGH_SCORE_FILE.createNewFile();
@@ -31,7 +31,7 @@ public class HighScore {
             Scanner reader = new Scanner(HIGH_SCORE_FILE);
             while(reader.hasNextLine()) {
                 String data = reader.nextLine();
-                scores.add(new Object[] {data.split("\t")[0], Integer.valueOf(data.split("\t")[1])});
+                scores.add(new Object[] {Integer.valueOf(data.split("\t", 2)[0]), data.split("\t", 2)[1]});
             }
             reader.close();
         } catch (Exception e) {
@@ -46,14 +46,14 @@ public class HighScore {
         return scores;
     }
 
-    public static boolean isHighScore(int score) {
-        return readScores().stream().anyMatch(i -> (int)i[1] < score); //if any i[1](score) is smaller, return true
+    public static boolean isHighScore(int score) { //if any i[0](score) is smaller or less high scores than maximum amount
+        return readScores().stream().anyMatch(i -> (int)i[0] < score) || readScores().size() < HIGH_SCORE_COUNT;
     }
 
     public static void writeScore(String name, int score) {
         ArrayList<Object[]> scores = readScores();
-        scores.add(new Object[] {name, score});
-        scores.sort((o1, o2) -> (int)o2[1] - (int)o1[1]);
+        scores.add(new Object[] {score, name});
+        scores.sort((o1, o2) -> (int)o2[0] - (int)o1[0]);
         scores = truncateScores(scores);
         try {
             FileWriter writer = new FileWriter(HIGH_SCORE_FILE, false);
@@ -68,10 +68,12 @@ public class HighScore {
 
     public static void showScores() {
         ArrayList<Object[]> scores = readScores();
-        int numberOfDigits = (int)Math.floor(Math.log10((int)scores.get(0)[1])) + 1;
-
-        //create a single string of scores: [<score1>] <name1>\n[<score2>] <name2>\n... etc.
-        String stringOfScores = scores.stream().map(x -> String.format("[%0"+numberOfDigits+"d] %s", x[1], x[0])).collect(Collectors.joining("\n"));
+        String stringOfScores = "";
+        if (scores.size() > 0) {
+            int numberOfDigits = (int)Math.floor(Math.log10((int)scores.get(0)[0])) + 1;
+            //create a single string of scores: [<score1>] <name1>\n[<score2>] <name2>\n... etc.
+            stringOfScores = scores.stream().map(x -> String.format("[%0"+numberOfDigits+"d] %s", x)).collect(Collectors.joining("\n"));
+        }
 
         Alert highscores = new Alert(Alert.AlertType.NONE, stringOfScores, ButtonType.CLOSE);
         highscores.setTitle("Highscores");
