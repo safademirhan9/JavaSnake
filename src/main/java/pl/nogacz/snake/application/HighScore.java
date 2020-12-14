@@ -5,8 +5,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+
+import javafx.scene.control.Alert;
 
 public class HighScore {
     private static final File HIGH_SCORE_FILE = new File(Paths.get(".", "high.scores").toUri()); //text file, name and score per line, tab seperated
@@ -63,5 +65,18 @@ public class HighScore {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void showScores() {
+        ArrayList<Object[]> scores = readScores();
+        int numberOfDigits = (int)Math.floor(Math.log10((int)scores.get(0)[1])) + 1;
+
+        //create a single string of scores: [<score1>] <name1>\n[<score2>] <name2>\n... etc.
+        String stringOfScores = scores.stream().map(x -> String.format("[%0"+numberOfDigits+"d] %s", x[1], x[0])).collect(Collectors.joining("\n"));
+
+        Alert highscores = new Alert(Alert.AlertType.NONE);
+        highscores.setTitle("Highscores");
+        highscores.setContentText(stringOfScores);
+        highscores.showAndWait();
     }
 }
