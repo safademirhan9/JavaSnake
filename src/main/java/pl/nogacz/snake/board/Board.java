@@ -32,8 +32,10 @@ import java.util.ArrayList;
 import java.util.Optional;
 import javax.imageio.*;
 import javafx.scene.image.Image;
+import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 
-
+//import pl.nogacz.snake.application.Menu;
 
 /**
  * @author Dawid Nogacz on 19.05.2019
@@ -42,9 +44,10 @@ public class Board {
     private HashMap<Coordinates, PawnClass> board = new HashMap<>();
     private Design design;
     private Random random = new Random();
+   // private Menu menu = new Menu();
 
     private boolean isEndGame = false;
-    private boolean isNewGame = false;
+    //private boolean isNewGame = false;
     //added
     private volatile boolean   paused = false;
 
@@ -61,43 +64,48 @@ public class Board {
 
     public Board(Design design) {
         this.design = design;
+        design.setBoard(this);
 
         addStartEntity();
         mapTask();
     }
 
-    private void newGame(){
+   /* private void newGame(){
+        //removeAllImage();
         isNewGame = true;
         isEndGame = false;
         setDefault();
-        addStartEntity();
-        mapTask();
+    
+        //displayAllImage();        
      }
 
     private void setDefault(){
-        design = new Design();
-        snakeHeadCoordinates = new Coordinates(10, 10);
-        isEndGame = false;
-        paused = false;
-        direction = 1;
+        
+        direction = 1;        
+        board.remove(snakeHeadCoordinates);
+        //design.removePawn(snakeHeadCoordinates);
+
+        for(Coordinates x : snakeTail){
+            board.remove(x);
+            //design.removePawn(x);
+        }
         tailLength = 0;
         snakeTail = new ArrayList<Coordinates>();
-        //board = new HashMap<Coordinates, PawnClass>();
-        
-    }
-
-    private void addStartEntity() {
-       if(isNewGame){
-            board.remove(snakeHeadCoordinates);
-            snakeHeadCoordinates = new Coordinates(10, 10);
-        }
-       
+        snakeHeadCoordinates = new Coordinates(10, 10);
         board.put(snakeHeadCoordinates, snakeHeadClass);
 
+        snakeTail = new ArrayList<Coordinates>(); 
+         
+        //displayAllImage(); 
+    }*/
+
+    private void addStartEntity() {       
+        board.put(snakeHeadCoordinates, snakeHeadClass);
+        //+2 for displaying the menu button in the gridpane
         for(int i = 0; i < 22; i++) {
-            board.put(new Coordinates(0, i), new PawnClass(Pawn.BRICK));
+            board.put(new Coordinates(0, i+1), new PawnClass(Pawn.BRICK));
             board.put(new Coordinates(21, i), new PawnClass(Pawn.BRICK));
-            board.put(new Coordinates(i, 0), new PawnClass(Pawn.BRICK));
+            board.put(new Coordinates(i+2, 0), new PawnClass(Pawn.BRICK));
             board.put(new Coordinates(i, 21), new PawnClass(Pawn.BRICK));
         }
 
@@ -136,6 +144,7 @@ public class Board {
     private void moveSnakeHead(Coordinates coordinates) {
         if(coordinates.isValid()) {
             if(isFieldNotNull(coordinates)) {
+
                 if(getPawn(coordinates).getPawn().isFood()) {
                     board.remove(snakeHeadCoordinates);
                     board.put(snakeHeadCoordinates, snakeBodyClass);
@@ -148,8 +157,9 @@ public class Board {
                     addEat();
                 } else {
                     isEndGame = true;
+                    paused = true;
                     //when game ends new manu is popped
-                   Menu();
+                    menuFrame();
                 }
             } else {
                 board.remove(snakeHeadCoordinates);
@@ -210,17 +220,18 @@ public class Board {
 
         task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(WorkerStateEvent event) {
+            public/* synchronized */void  handle(WorkerStateEvent event) {
+
                 if(!isEndGame && !paused) {
                     checkMap();
                     mapTask();
                 }
                 if(paused){
-                   System.out.println("paused");
                     while(paused){
                     try{
                     Thread.sleep(100);
                     } catch (Exception e) {
+                        Thread.currentThread().interrupt();
                         System.out.println(e.getMessage());
                     }
     
@@ -248,53 +259,34 @@ public class Board {
             case DOWN: changeDirection(2); break;
             case LEFT: changeDirection(3); break;
             case RIGHT: changeDirection(4); break;
-            case ESCAPE : Menu(); break;
+            case ESCAPE : menuFrame(); break;
 
         }
     }
 
-    private void Menu(){
-        System.out.println();
+    public void menuFrame() {
+        JFrame frame = new JFrame("MENU");    
+        JPanel panel = new JPanel();   
+
         paused = true;
-        JFrame frame = new JFrame("MENU");       
+        // Create and set up a frame window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setAlwaysOnTop(true);
-        /*img = ImageIO.read(getClass().getResourceAsStream(IMG_PATH));*/
          
-        // Set the panel to add buttons
-        JPanel panel = new JPanel();/* {  
-            public void paintComponent(Graphics g) {  
-                try{
-                 Image img = new Image(pathComponent("background.jpg"));  
-                    g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);  
-                    /*final Canvas canvas = new Canvas(W * NUM_IMGS, H);
-                    final GraphicsContext gc = canvas.getGraphicsContext2D();
-                    gc.setFill(Color.GOLD);
-                    gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                }catch(Exception e){
-
-                }
-            }  
-        }; */
-
         panel.setLayout(new GridLayout(0,1));
-           
         // Set the BoxLayout to be X_AXIS: from left to right
         BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
-
         panel.setLayout(boxlayout);
-         
         // Set border for the panel
-        panel.setBorder(new EmptyBorder(new Insets(50, 100, 50, 100)));   
-       
-        // Define new buttons and text fields
+        panel.setBorder(new EmptyBorder(new Insets(50, 100, 50, 100))); 
+      
         JLabel tx1 = new JLabel("Menu");
         JLabel point = new JLabel("Your Score is " + tailLength);
         JButton resumeButton = new JButton("RESUME");
         JButton newGameButton = new JButton("NEW GAME");        
         JButton settingsButton = new JButton("CHANGE SETTINGS");
         JButton exitButton = new JButton("EXIT");
-
+      
         tx1.setFont(new Font("Serif", Font.PLAIN, 30));
         point.setFont(new Font("Serif", Font.PLAIN, 20));
         
@@ -314,7 +306,8 @@ public class Board {
         	public void actionPerformed(ActionEvent e){  
                         paused = false;
                         frame.setVisible(false);
-                        restartApplication();
+                        //newGame();
+                        //restartApplication();
                         /*EndGame end = new EndGame("end");
                         end.newGame();
                         /*Snake s = new Snake();
@@ -385,34 +378,13 @@ public class Board {
         frame.validate();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-     }
-
-     public void restartApplication()
-    {       System.out.println("deneme-----------------------------------------------");
-        try {
-            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
-            System.out.println("javaBin    "+javaBin);
-            final File currentJar = new File(Snake.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-
-            /* is it a jar file? */
-            if(!currentJar.getName().endsWith(".jar"))
-                return;
-
-            /* Build command: java -jar application.jar */
-            final ArrayList<String> command = new ArrayList<String>();
-            command.add(javaBin);
-            command.add("-jar");
-            command.add(currentJar.getPath());
-
-            final ProcessBuilder builder = new ProcessBuilder(command);
-            builder.start();
-            System.exit(0);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+ 
     }
-
-   
+        //remove file:/from path
+        public String pathComponent(String filename) {
+            String path = Resources.getPath(filename);
+            return path.substring(path.indexOf("/")+1);
+        }
 
     private void changeDirection(int newDirection) {
         if(newDirection == 1 && direction != 2) {
@@ -434,14 +406,8 @@ public class Board {
         return board.get(coordinates);
     }
 
-    //remove file:/from path
-    public String pathComponent(String filename) {
-        String path = Resources.getPath(filename);
-        return path.substring(path.indexOf("/")+1);
-    }
-
     public static int getDirection() {
         return direction;
     }
-  
+ 
 }
