@@ -7,7 +7,6 @@ import java.util.Optional;
  * @author Dawid Nogacz on 19.05.2019
  */
 public class skinMenu {
-    //public PawnClass snakeBodyClass;
     private String message;
     private static int skinTone = 1;
     private static int headSkin = 1;
@@ -38,7 +37,6 @@ public class skinMenu {
         else if (result.get() == skin2){
             skinTone = 2;
             headSkin = 2;
-            //snakeBodyClass = new PawnClass(Pawn.SNAKE_BODY2);
         }
         else if (result.get() == skin3){
             skinTone = 3;

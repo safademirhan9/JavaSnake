@@ -23,8 +23,6 @@ public class keybindMenu {
 
         ButtonType keymap1 = new ButtonType("WASD Keymap");
         ButtonType keymap2 = new ButtonType("Arrows Keymap");
-        //ButtonType buttonLeft = new ButtonType("Change Left Button");
-        //ButtonType buttonRight = new ButtonType("Change Right Button");
 
         alert.getButtonTypes().setAll(keymap1, keymap2);
 
