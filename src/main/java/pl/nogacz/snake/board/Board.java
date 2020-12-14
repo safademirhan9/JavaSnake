@@ -34,8 +34,18 @@ import javax.imageio.*;
 import javafx.scene.image.Image;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import java.awt.Color;
+import javafx.stage.Stage;
 
-//import pl.nogacz.snake.application.Menu;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Optional;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 
 /**
  * @author Dawid Nogacz on 19.05.2019
@@ -108,7 +118,6 @@ public class Board {
             board.put(new Coordinates(i+2, 0), new PawnClass(Pawn.BRICK));
             board.put(new Coordinates(i, 21), new PawnClass(Pawn.BRICK));
         }
-
         addEat();
         displayAllImage();
     }
@@ -144,7 +153,6 @@ public class Board {
     private void moveSnakeHead(Coordinates coordinates) {
         if(coordinates.isValid()) {
             if(isFieldNotNull(coordinates)) {
-
                 if(getPawn(coordinates).getPawn().isFood()) {
                     board.remove(snakeHeadCoordinates);
                     board.put(snakeHeadCoordinates, snakeBodyClass);
@@ -157,11 +165,16 @@ public class Board {
                     addEat();
                 } else {
                     isEndGame = true;
-                    paused = true;
                     //when game ends new manu is popped
                     menuFrame();
                 }
             } else {
+                //if snake is headed to the menu button it will end the game
+                if(coordinates.getX() == 1 && coordinates.getY() == 0){
+                    isEndGame = true;
+                    //when game ends new manu is popped
+                    menuFrame();
+                }
                 board.remove(snakeHeadCoordinates);
                 board.put(coordinates, snakeHeadClass);
 
@@ -259,12 +272,13 @@ public class Board {
             case DOWN: changeDirection(2); break;
             case LEFT: changeDirection(3); break;
             case RIGHT: changeDirection(4); break;
-            case ESCAPE : menuFrame(); break;
+            case ESCAPE : if(!paused) menuFrame(); break;
 
         }
     }
 
     public void menuFrame() {
+        if(!paused){
         JFrame frame = new JFrame("MENU");    
         JPanel panel = new JPanel();   
 
@@ -273,7 +287,7 @@ public class Board {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setAlwaysOnTop(true);
          
-        panel.setLayout(new GridLayout(0,1));
+        panel.setLayout(new GridLayout(0, 1));
         // Set the BoxLayout to be X_AXIS: from left to right
         BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         panel.setLayout(boxlayout);
@@ -306,12 +320,7 @@ public class Board {
         	public void actionPerformed(ActionEvent e){  
                         paused = false;
                         frame.setVisible(false);
-                        //newGame();
-                        //restartApplication();
-                        /*EndGame end = new EndGame("end");
-                        end.newGame();
-                        /*Snake s = new Snake();
-                        s.newGame(); */ 
+                        restartApplication();
         	}  
             }); 
         
@@ -370,6 +379,7 @@ public class Board {
         panel.add(exitButton);
         
         // Set size for the frame
+        frame.getContentPane().setBackground( new Color(255, 255, 153) );
         frame.setSize(600, 700);
         
          panel.setVisible(true);
@@ -378,12 +388,34 @@ public class Board {
         frame.validate();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
- 
+        }
     }
+    /*the restart game from endGame class is not working 
+      Also I can not implement a restart method with jar  because of the dependencies*/
+    private void restartApplication()
+    {   
+        String PATH_TO_GRADLE_PROJECT = "./";
+        String GRADLEW_EXECUTABLE = "gradlew.bat";
+        String BALNK = " --parallel ";
+        String GRADLE_TASK = "run";
+    
+        
+            String command = PATH_TO_GRADLE_PROJECT + GRADLEW_EXECUTABLE + BALNK + GRADLE_TASK;
+            try
+            {
+                Runtime.getRuntime().exec(command);
+                System.exit(0);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
         //remove file:/from path
         public String pathComponent(String filename) {
             String path = Resources.getPath(filename);
-            return path.substring(path.indexOf("/")+1);
+            return path.substring(path.indexOf("/") + 1);
         }
 
     private void changeDirection(int newDirection) {
@@ -408,6 +440,10 @@ public class Board {
 
     public static int getDirection() {
         return direction;
+    }
+
+    public boolean getPaused(){
+        return paused;
     }
  
 }
