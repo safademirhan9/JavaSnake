@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javafx.scene.control.Alert;
@@ -29,8 +30,13 @@ public class HighScore {
         ArrayList<Object[]> scores = new ArrayList<>(HIGH_SCORE_COUNT);
         try {
             Scanner reader = new Scanner(HIGH_SCORE_FILE);
+            Pattern pattern = Pattern.compile("[0-9]*\t.*");
             while(reader.hasNextLine()) {
                 String data = reader.nextLine();
+                if (!pattern.matcher(data).matches()){
+                    System.out.println("Ignored from scoreboard: \"" + data + "\"");
+                    continue;
+                }
                 scores.add(new Object[] {Integer.valueOf(data.split("\t", 2)[0]), data.split("\t", 2)[1]});
             }
             reader.close();
