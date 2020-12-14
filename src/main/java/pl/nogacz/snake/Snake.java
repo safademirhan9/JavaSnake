@@ -1,5 +1,4 @@
 package pl.nogacz.snake;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;

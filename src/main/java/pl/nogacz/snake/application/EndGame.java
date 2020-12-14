@@ -1,9 +1,7 @@
 package pl.nogacz.snake.application;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import pl.nogacz.snake.Snake;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -22,7 +20,7 @@ public class EndGame {
 
     public void printDialog() {
         Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.setTitle("JavaChess");
+        alert.setTitle("JavaSnake");
         alert.setContentText(message);
 
         ButtonType newGameButton = new ButtonType("New game");
