@@ -1,7 +1,6 @@
 package pl.nogacz.snake.application;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.input.KeyEvent;
 import java.util.Optional;
 
 /**
@@ -32,12 +31,10 @@ public class keybindMenu {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get() == keymap1) {
-            System.out.println("keymap1");
             isArrowKeymap = false;
             
         }
         else if(result.get() == keymap2) {
-            System.out.println("keymap2");
             isArrowKeymap = true;
         }
     }

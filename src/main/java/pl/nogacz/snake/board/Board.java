@@ -33,7 +33,6 @@ public class Board {
     private int tailLength = 0;
     private Coordinates snakeHeadCoordinates = new Coordinates(10, 10);
     private PawnClass snakeHeadClass = new PawnClass(Pawn.SNAKE_HEAD);
-    //private PawnClass snakeBodyClass = setBodySkin();
     private PawnClass snakeBodyClass = new PawnClass(Pawn.SNAKE_BODY);
     private PawnClass snakeBodyClass2 = new PawnClass(Pawn.SNAKE_BODY2);
     private PawnClass snakeBodyClass3 = new PawnClass(Pawn.SNAKE_BODY3);
@@ -109,7 +108,6 @@ public class Board {
                         default: break;
 
                     }
-                    //board.put(snakeHeadCoordinates, snakeBodyClass);
                     board.put(coordinates, snakeHeadClass);
                     snakeTail.add(snakeHeadCoordinates);
                     tailLength++;
@@ -159,7 +157,6 @@ public class Board {
             default: break;
 
         }
-        //board.put(coordinates, snakeBodyClass);
         snakeTail.add(coordinates);
     }
 
