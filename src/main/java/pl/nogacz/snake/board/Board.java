@@ -27,7 +27,8 @@ public class Board {
     private static int direction = 1; // 1 - UP || 2 - BOTTOM || 3 - LEFT || 4 - RIGHT
     private int tailLength = 0;
 
-    private int counter= 0; // To make disappear rotten food after a while
+    private int disappearanceTime = 20;
+    private int disappearanceCounter = 0;
 
     private Coordinates snakeHeadCoordinates = new Coordinates(10, 10);
     private Coordinates rottenFoodCoordinates = null;
@@ -57,7 +58,7 @@ public class Board {
             board.put(new Coordinates(i, 21), new PawnClass(Pawn.BRICK));
         }
 
-        addEat(true); //true for fresh food
+        addFreshFood(); 
         displayAllImage();
     }
 
@@ -88,21 +89,20 @@ public class Board {
         }
     }
 
-    private void moveSnakeHead(Coordinates coordinates) { // his head will be at foods location
+    private void moveSnakeHead(Coordinates coordinates) {
         if(coordinates.isValid()) {
-            if(rottenFoodCoordinates == null){ // There is no rotten food on the field
+            if(!isRottenFoodExist()){
                 int randomnum = random.nextInt(10);
-                if( randomnum == 1 ){ // Randomness
-                    addEat(false);
+                if(randomnum == 1){
+                    addRottenFood();
                 } 
             }
             else{   
-                System.out.println(counter);
-                if(counter < 20) counter++;
-                if(counter == 20){ // Disappear after 20 snake moves.
-                    counter = 0;
+                if(disappearanceCounter < disappearanceTime) disappearanceCounter++;
+                if(disappearanceCounter == disappearanceTime){ 
+                    disappearanceCounter = 0;
                     board.remove(rottenFoodCoordinates);
-                    rottenFoodCoordinates=null;
+                    rottenFoodCoordinates = null;
                 }
             } 
             if(isFieldNotNull(coordinates)) {
@@ -115,7 +115,7 @@ public class Board {
 
                     snakeHeadCoordinates = coordinates;
 
-                    addEat(true);
+                    addFreshFood();
                 }
                 else if(getPawn(coordinates).getPawn().isRottenFood()){
                     if(tailLength == 0){
@@ -137,8 +137,8 @@ public class Board {
                     tailLength--;
 
                     snakeHeadCoordinates = coordinates;
-                    counter = 0;
-                    rottenFoodCoordinates=null; 
+                    disappearanceCounter = 0;
+                    rottenFoodCoordinates = null; 
 
                 } else {
                     isEndGame = true;
@@ -179,7 +179,7 @@ public class Board {
         snakeTail.add(coordinates);
     }
 
-    private void addEat(boolean bool) { // true for fresh foods, false for rotten foods for.
+    private void addEat(boolean bool) {
         Coordinates foodCoordinates;
 
         do {
@@ -192,6 +192,13 @@ public class Board {
             board.put(foodCoordinates, rottenFoodClass);  
             rottenFoodCoordinates = foodCoordinates;
         }      
+    }
+    private void addFreshFood(){
+        addEat(true);
+    }
+
+    private void addRottenFood(){
+        addEat(false);
     }
 
     private void mapTask() {
@@ -257,5 +264,8 @@ public class Board {
 
     public static int getDirection() {
         return direction;
+    }
+    private boolean isRottenFoodExist(){
+        return rottenFoodCoordinates != null;
     }
 }
