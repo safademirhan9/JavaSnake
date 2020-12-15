@@ -1,4 +1,5 @@
 package pl.nogacz.snake.application;
+
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -44,7 +45,7 @@ public class Design {
         gridPane.setPadding(new Insets(10, 0, 0, 10));
     }
 
-    public void addPawn(Coordinates coordinates, PawnClass pawn){
+    public void addPawn(Coordinates coordinates, PawnClass pawn) {
         if(pawn.getPawn().isHead()) {
             gridPane.add(pawn.getImageDirection(Board.getDirection()), coordinates.getX(), coordinates.getY());
         } else {

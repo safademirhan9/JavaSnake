@@ -3,9 +3,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
 
-/**
- * @author Dawid Nogacz on 19.05.2019
- */
 public class skinMenu {
     private String message;
     private static int skinTone = 1;

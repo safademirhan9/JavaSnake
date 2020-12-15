@@ -1,4 +1,5 @@
 package pl.nogacz.snake.board;
+
 import java.util.Objects;
 
 /**

@@ -3,14 +3,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
 
-/**
- * @author Dawid Nogacz on 19.05.2019
- */
-public class keybindMenu {
+public class keyBindMenu {
     private String message;
     private static boolean isArrowKeymap = false;
 
-    public keybindMenu(String message) {
+    public keyBindMenu(String message) {
         this.message = message;
 
         printDialog();

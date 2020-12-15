@@ -3,9 +3,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
 
-/**
- * @author Dawid Nogacz on 19.05.2019
- */
 public class PauseGame {
     private String message;
 
@@ -34,7 +31,7 @@ public class PauseGame {
             new skinMenu("Select Skin");
         }
         else if(result.get() == keyBindButton) {
-            new keybindMenu("Change Key");
+            new keyBindMenu("Change Key");
         }
     }
 }
