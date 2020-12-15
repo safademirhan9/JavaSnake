@@ -31,7 +31,7 @@ public class PauseGame {
             new skinMenu("Select Skin");
         }
         else if(result.get() == keyBindButton) {
-            new keyBindMenu("Change Key");
+            new keybindMenu("Change Key");
         }
     }
 }
