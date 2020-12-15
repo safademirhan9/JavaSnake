@@ -1,20 +1,19 @@
 package pl.nogacz.snake.application;
 
+import java.awt.Font;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+
 import pl.nogacz.snake.board.Board;
 import pl.nogacz.snake.board.Coordinates;
 import pl.nogacz.snake.pawn.PawnClass;
-//import javax.swing.*;
-
-import javafx.scene.control.Button;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import java.awt.Font;
 
 /**
  * @author Dawid Nogacz on 19.05.2019
@@ -54,21 +53,11 @@ public class Design {
         gridPane.setPadding(new Insets(10, 0, 0, 10));      
     }
 
-
     public void putMenuButton(){
-
         Button menuButton = new Button("    Menu    ");
-       /* Font font = Font.font("Courier New", FontWeight.BOLD, 36);
-
-        menuButton.setFont(font);*/
         menuButton.setVisible(true);
         gridPane.add(menuButton, 0, 0, 3,1);
         menuButton.setStyle("-fx-text-alignment: center; -fx-border-color: black; -fx-text-fill: CORNFLOWERBLUE; -fx-font-weight: bold; -fx-background-color: #975e25");
-        //menuButton.setSize(100, 20);
-  
-  
-  /*-fx-font-size: 15px;
-  -fx-background-color: #545050;*/
         
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -77,7 +66,6 @@ public class Design {
                 }
         	}  
         });
-     
     }
 
     public void addPawn(Coordinates coordinates, PawnClass pawn) {
