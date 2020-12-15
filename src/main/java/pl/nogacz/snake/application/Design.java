@@ -9,13 +9,12 @@ import javafx.scene.layout.*;
 import pl.nogacz.snake.board.Board;
 import pl.nogacz.snake.board.Coordinates;
 import pl.nogacz.snake.pawn.PawnClass;
-import javax.swing.*;
+//import javax.swing.*;
 
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.awt.Font;
-
 
 /**
  * @author Dawid Nogacz on 19.05.2019
@@ -45,29 +44,31 @@ public class Design {
             column.setHgrow(Priority.ALWAYS);
             column.setHalignment(HPos.CENTER);
             gridPane.getColumnConstraints().add(column);
-
+            
             RowConstraints row = new RowConstraints(32);
             row.setVgrow(Priority.ALWAYS);
             row.setValignment(VPos.CENTER);
             gridPane.getRowConstraints().add(row);
         }
 
-        gridPane.setPadding(new Insets(10, 0, 0, 10));
-        //adding menu button
-        putMenuButton();
-        
+        gridPane.setPadding(new Insets(10, 0, 0, 10));      
     }
 
 
-    private void putMenuButton(){
-        Button menuButton = new Button("Menu");
+    public void putMenuButton(){
+
+        Button menuButton = new Button("    Menu    ");
        /* Font font = Font.font("Courier New", FontWeight.BOLD, 36);
 
         menuButton.setFont(font);*/
         menuButton.setVisible(true);
-        gridPane.add(menuButton, 0, 0, 2,1);
-        //changing border and background colours
-        menuButton.setStyle("-fx-border-color: #975e25  ; -fx-border-width: 4px; -fx-background-color: ##7e7e7e; ");
+        gridPane.add(menuButton, 0, 0, 3,1);
+        menuButton.setStyle("-fx-text-alignment: center; -fx-border-color: black; -fx-text-fill: CORNFLOWERBLUE; -fx-font-weight: bold; -fx-background-color: #975e25");
+        //menuButton.setSize(100, 20);
+  
+  
+  /*-fx-font-size: 15px;
+  -fx-background-color: #545050;*/
         
         menuButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {

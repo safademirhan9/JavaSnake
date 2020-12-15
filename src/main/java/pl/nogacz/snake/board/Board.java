@@ -16,37 +16,28 @@ import java.util.Random;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
 
-import javax.swing.*;
-import java.awt.*;
-import java.net.URL;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.GridLayout;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import java.awt.Component;
+import javax.swing.Box;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import pl.nogacz.snake.application.Resources;
-import pl.nogacz.snake.application.Resources;
-import pl.nogacz.snake.Snake;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Optional;
-import javax.imageio.*;
-import javafx.scene.image.Image;
-import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import java.awt.Color;
-import javafx.stage.Stage;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Optional;
-
+import javax.swing.border.EmptyBorder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-
 /**
  * @author Dawid Nogacz on 19.05.2019
  */
@@ -54,10 +45,8 @@ public class Board {
     private HashMap<Coordinates, PawnClass> board = new HashMap<>();
     private Design design;
     private Random random = new Random();
-   // private Menu menu = new Menu();
 
     private boolean isEndGame = false;
-    //private boolean isNewGame = false;
     //added
     private volatile boolean   paused = false;
 
@@ -80,45 +69,17 @@ public class Board {
         mapTask();
     }
 
-   /* private void newGame(){
-        //removeAllImage();
-        isNewGame = true;
-        isEndGame = false;
-        setDefault();
-    
-        //displayAllImage();        
-     }
-
-    private void setDefault(){
-        
-        direction = 1;        
-        board.remove(snakeHeadCoordinates);
-        //design.removePawn(snakeHeadCoordinates);
-
-        for(Coordinates x : snakeTail){
-            board.remove(x);
-            //design.removePawn(x);
-        }
-        tailLength = 0;
-        snakeTail = new ArrayList<Coordinates>();
-        snakeHeadCoordinates = new Coordinates(10, 10);
-        board.put(snakeHeadCoordinates, snakeHeadClass);
-
-        snakeTail = new ArrayList<Coordinates>(); 
-         
-        //displayAllImage(); 
-    }*/
-
     private void addStartEntity() {       
         board.put(snakeHeadCoordinates, snakeHeadClass);
         //+2 for displaying the menu button in the gridpane
         for(int i = 0; i < 22; i++) {
             board.put(new Coordinates(0, i+1), new PawnClass(Pawn.BRICK));
             board.put(new Coordinates(21, i), new PawnClass(Pawn.BRICK));
-            board.put(new Coordinates(i+2, 0), new PawnClass(Pawn.BRICK));
+            board.put(new Coordinates(i+3, 0), new PawnClass(Pawn.BRICK));
             board.put(new Coordinates(i, 21), new PawnClass(Pawn.BRICK));
         }
         addEat();
+        design.putMenuButton();
         displayAllImage();
     }
 
@@ -140,7 +101,6 @@ public class Board {
         }
     }
   
-
     private void moveSnake() {
         switch(direction) {
             case 1: moveSnakeHead(new Coordinates(snakeHeadCoordinates.getX(), snakeHeadCoordinates.getY() - 1)); break;
@@ -170,7 +130,7 @@ public class Board {
                 }
             } else {
                 //if snake is headed to the menu button it will end the game
-                if(coordinates.getX() == 1 && coordinates.getY() == 0){
+                if((coordinates.getX() == 1 || coordinates.getX() == 2 ) && coordinates.getY() == 0){
                     isEndGame = true;
                     //when game ends new manu is popped
                     menuFrame();
@@ -209,10 +169,10 @@ public class Board {
 
     private void addEat() {
         Coordinates foodCoordinates;
-
+        //while statement modified to not put apple to the menus place
         do {
             foodCoordinates = new Coordinates(random.nextInt(21), random.nextInt(21));
-        } while(isFieldNotNull(foodCoordinates));
+        } while(isFieldNotNull(foodCoordinates) || ((foodCoordinates.getX() == 0 || foodCoordinates.getX() == 1 || (foodCoordinates.getX() == 2)) && foodCoordinates.getY() == 0)); 
 
         board.put(foodCoordinates, foodClass);
     }
@@ -233,12 +193,13 @@ public class Board {
 
         task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public/* synchronized */void  handle(WorkerStateEvent event) {
+            public void  handle(WorkerStateEvent event) {
 
                 if(!isEndGame && !paused) {
                     checkMap();
                     mapTask();
                 }
+                //for puse the game while menu is open keep sleeping thread
                 if(paused){
                     while(paused){
                     try{
@@ -249,14 +210,12 @@ public class Board {
                     }
     
                     }
-                    System.out.println("NOT paused");
                     
                     checkMap();
                     mapTask();
                 }
             }
         });
-
         new Thread(task).start();
     }
 
@@ -272,22 +231,17 @@ public class Board {
             case DOWN: changeDirection(2); break;
             case LEFT: changeDirection(3); break;
             case RIGHT: changeDirection(4); break;
-            case ESCAPE : if(!paused) menuFrame(); break;
-
+            case ESCAPE : menuFrame(); break;
         }
     }
 
     public void menuFrame() {
         if(!paused){
-        JFrame frame = new JFrame("MENU");    
-        JPanel panel = new JPanel();   
-
         paused = true;
-        // Create and set up a frame window
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setAlwaysOnTop(true);
-         
-        panel.setLayout(new GridLayout(0, 1));
+        
+        JFrame frame = new JFrame("MENU"); 
+        JPanel panel = new JPanel();   
+   
         // Set the BoxLayout to be X_AXIS: from left to right
         BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         panel.setLayout(boxlayout);
@@ -301,20 +255,24 @@ public class Board {
         JButton settingsButton = new JButton("CHANGE SETTINGS");
         JButton exitButton = new JButton("EXIT");
       
-        tx1.setFont(new Font("Serif", Font.PLAIN, 30));
-        point.setFont(new Font("Serif", Font.PLAIN, 20));
+        tx1.setFont(new Font("Courier", Font.BOLD, 30));
+        point.setFont(new Font("ZapfDingbats", Font.BOLD, 20));
+        resumeButton.setFont((new Font("ZapfDingbats", Font.BOLD, 20)));
+        newGameButton.setFont((new Font("ZapfDingbats", Font.BOLD, 20)));
+        settingsButton.setFont((new Font("ZapfDingbats", Font.BOLD, 20)));
+        exitButton.setFont((new Font("ZapfDingbats", Font.BOLD, 20)));
         
-        resumeButton.setPreferredSize(new Dimension(300, 30));
+        /*resumeButton.setPreferredSize(new Dimension(300, 30));
         newGameButton.setPreferredSize(new Dimension(300, 30));
         settingsButton.setPreferredSize(new Dimension(300, 30));
-        exitButton.setPreferredSize(new Dimension(300, 30));
+        exitButton.setPreferredSize(new Dimension(300, 30));*/
         
         resumeButton.addActionListener(new ActionListener(){  
         	public void actionPerformed(ActionEvent e){  
                        paused = false;
         	           frame.setVisible(false);  
         	}  
-        	}); 
+        }); 
         
         newGameButton.addActionListener(new ActionListener(){  
         	public void actionPerformed(ActionEvent e){  
@@ -322,12 +280,12 @@ public class Board {
                         frame.setVisible(false);
                         restartApplication();
         	}  
-            }); 
-        
+        }); 
+        //this is a different issue
         settingsButton.addActionListener(new ActionListener(){  
         	public void actionPerformed(ActionEvent e){  
         	}  
-        	}); 
+        }); 
         
         exitButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e){  
@@ -343,21 +301,25 @@ public class Board {
         point.setIcon(new ImageIcon(pathComponent("SNAKE_HEAD_UP.png")));
         point.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        resumeButton.setBackground(new Color(151,94,37));
         resumeButton.setIcon(new ImageIcon(pathComponent("SNAKE_BODY.png")));
         resumeButton.setIconTextGap(3);
         resumeButton.setHorizontalAlignment(SwingConstants.LEFT);
         resumeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        newGameButton.setBackground(new Color(151,94,37));
         newGameButton.setIcon(new ImageIcon(pathComponent("SNAKE_BODY.png")));
         newGameButton.setIconTextGap(3);
         newGameButton.setHorizontalAlignment(SwingConstants.LEFT);
         newGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        settingsButton.setBackground(new Color(151,94,37));
         settingsButton.setIcon(new ImageIcon(pathComponent("SNAKE_BODY.png")));
         settingsButton.setIconTextGap(3);
         settingsButton.setHorizontalAlignment(SwingConstants.LEFT);
         settingsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        exitButton.setBackground(new Color(151,94,37));
         exitButton.setIcon(new ImageIcon(pathComponent("SNAKE_BODY.png")));
         exitButton.setIconTextGap(3);
         exitButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -368,6 +330,7 @@ public class Board {
         panel.add(Box.createRigidArea(new Dimension(0, 60))); 
         panel.add(point);
         panel.add(Box.createRigidArea(new Dimension(0, 60)));     
+        //if game over then there is no resume option
         if(!isEndGame){
         panel.add(resumeButton);     
         panel.add(Box.createRigidArea(new Dimension(0, 60)));
@@ -378,13 +341,18 @@ public class Board {
         panel.add(Box.createRigidArea(new Dimension(0, 60)));
         panel.add(exitButton);
         
+        
+        // Create and set up a frame window
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setAlwaysOnTop(true);
         // Set size for the frame
-        frame.getContentPane().setBackground( new Color(255, 255, 153) );
-        frame.setSize(600, 700);
+        //frame.setSize(600, 700);
         
          panel.setVisible(true);
         // Set the window to be visible as the default to be false
-        frame.add(panel);
+        frame.setContentPane(panel);
+        frame.pack();
+        frame.getContentPane().setBackground(new Color(255, 255, 153));
         frame.validate();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -413,10 +381,10 @@ public class Board {
         }
 
         //remove file:/from path
-        public String pathComponent(String filename) {
-            String path = Resources.getPath(filename);
-            return path.substring(path.indexOf("/") + 1);
-        }
+    public String pathComponent(String filename) {
+        String path = Resources.getPath(filename);
+        return path.substring(path.indexOf("/") + 1);
+    }
 
     private void changeDirection(int newDirection) {
         if(newDirection == 1 && direction != 2) {
@@ -441,7 +409,7 @@ public class Board {
     public static int getDirection() {
         return direction;
     }
-
+    //return paused
     public boolean getPaused(){
         return paused;
     }
