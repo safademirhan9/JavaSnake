@@ -1,11 +1,11 @@
 package pl.nogacz.snake.application;
-
 import java.net.URL;
 
 /**
  * @author Dawid Nogacz on 19.05.2019
  */
 public class Resources {
+    private Resources(){}
     public static String getPath(String fileName) {
         ClassLoader classLoader = Resources.class.getClassLoader();
 
